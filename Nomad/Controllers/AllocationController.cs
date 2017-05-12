@@ -95,9 +95,9 @@ namespace Nomad.Controllers
 
                 foreach (var key in allocation.TaskStates.Keys)
                 {
-                    if (allocation.DesiredStatus == "run" || allocation.TaskStates[key].State == "pending") { allocation.Pending++; }
-                    if (allocation.DesiredStatus == "run" || allocation.TaskStates[key].State == "running") { allocation.Running++; }
-                    if (allocation.DesiredStatus == "run" || allocation.TaskStates[key].State == "dead") { allocation.Dead++; }
+                    if (allocation.DesiredStatus == "run" && allocation.TaskStates[key].State == "pending") { allocation.Pending++; }
+                    if (allocation.DesiredStatus == "run" && allocation.TaskStates[key].State == "running") { allocation.Running++; }
+                    if (allocation.DesiredStatus == "run" && allocation.TaskStates[key].State == "dead") { allocation.Dead++; }
 
                     foreach (var @event in allocation.TaskStates[key].Events)
                     {

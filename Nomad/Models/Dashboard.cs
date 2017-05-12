@@ -51,7 +51,7 @@ namespace Nomad.Models
         {
             get
             {
-                return Allocations.Sum(a => a.Pending);
+                return Allocations.Sum(a => a.Running);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Nomad.Models
         {
             get
             {
-                return Allocations.Sum(a => a.Pending);
+                return Allocations.Sum(a => a.Dead);
             }
         }
 
