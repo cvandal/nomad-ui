@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var member in Model.Members)
+                @foreach (var member in Model.Members.OrderBy(m => m.Name))
                 {
                     <tr>
                         <td><a href="/server?ip=@member.Addr">@member.Name</a></td>
