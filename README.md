@@ -30,4 +30,4 @@ ENTRYPOINT ["dotnet", "Nomad.dll"]
 ![alt text](https://github.com/cvandal/nomad-ui/blob/master/Nomad/wwwroot/images/client.png "Client")
 
 ### Known Issues
-¯\_(ツ)_/¯
+`¯\_(ツ)_/¯`
