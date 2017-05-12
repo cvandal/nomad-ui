@@ -26,7 +26,10 @@ namespace Nomad.Controllers
         [Route("/server")]
         public async Task<IActionResult> Agent(string ip)
         {
+            var agentOperatorTask = GetAgentOperatorsAsync();
+            
             var agent = await GetAgentAsync(ip);
+            agent.Operator = await agentOperatorTask;
 
             return View("~/Views/Nomad/Server.cshtml", agent);
         }
