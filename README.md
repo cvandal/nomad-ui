@@ -4,7 +4,7 @@ Something something something Hashicorp doesn't provide a UI for Nomad something
 
 ### Usage
 ```
-docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -p 5000:5000 cvandal/nomad-ui:0.1.0
+docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 cvandal/nomad-ui:0.1.0
 ```
 
 ### Development
