@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nomad.Models;
+using Task = System.Threading.Tasks.Task;
 
 namespace Nomad.Controllers
 {
@@ -11,13 +9,22 @@ namespace Nomad.Controllers
     {
         public async Task<IActionResult> Index()
         {
-            var dashboard = new Dashboard();
-            dashboard.Jobs = await new JobController().GetJobsAsync();
-            dashboard.Allocations = await new AllocationController().GetAllocationsAsync();
-            dashboard.Events = new AllocationController().GetAllocationEvents(dashboard.Allocations);
-            dashboard.Nodes = await new NodeController().GetNodesAsync();
-            dashboard.Agent = await new AgentController().GetAgentsAsync();
-            
+            var jobsTask = new JobController().GetJobsAsync();
+            var allocationsTask = new AllocationController().GetAllocationsAsync();
+            var nodesTask = new NodeController().GetNodesAsync();
+            var agentTask = new AgentController().GetAgentsAsync();
+
+            await Task.WhenAll(jobsTask, allocationsTask, nodesTask, agentTask);
+
+            var dashboard = new Dashboard
+            {
+                Jobs = await jobsTask,
+                Allocations = await allocationsTask,
+                Nodes = await nodesTask,
+                Agent = await agentTask,
+                Events = new AllocationController().GetAllocationEvents(await allocationsTask)
+            };
+
             return View("~/Views/Nomad/Dashboard.cshtml", dashboard);
         }
     }

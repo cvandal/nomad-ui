@@ -42,8 +42,7 @@ namespace Nomad.Controllers
 
         public async Task<List<Allocation>> GetAllocationsAsync()
         {
-            var allocations = new List<Allocation>();
-            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            List<Allocation> allocations;
 
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/allocations"))
@@ -54,18 +53,12 @@ namespace Nomad.Controllers
                 allocations = JsonConvert.DeserializeObject<List<Allocation>>(result);
             }
 
-            foreach (var allocation in allocations)
-            {
-                allocation.CreateTime = dateTime.AddTicks(Convert.ToInt64(allocation.CreateTime) / (TimeSpan.TicksPerMillisecond / 100)).ToLocalTime();
-            }
-
             return allocations.OrderBy(a => a.Name).ToList();
         }
 
         public async Task<Allocation> GetAllocationAsync(string id)
         {
-            var allocation = new Allocation();
-            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            Allocation allocation;
 
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/allocation/" + id))
@@ -78,15 +71,12 @@ namespace Nomad.Controllers
                 allocation = JsonConvert.DeserializeObject<Allocation>(result);
             }
 
-            allocation.CreateTime = dateTime.AddTicks(Convert.ToInt64(allocation.CreateTime) / (TimeSpan.TicksPerMillisecond / 100)).ToLocalTime();
-
             return allocation;
         }
 
         public List<Event> GetAllocationEvents(List<Allocation> allocations)
         {
             var events = new List<Event>();
-            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
             foreach (var allocation in allocations)
             {
@@ -103,7 +93,6 @@ namespace Nomad.Controllers
                     {
                         @event.AllocationId = allocation.ID;
                         @event.AllocationName = allocation.Name;
-                        @event.Time = dateTime.AddTicks(Convert.ToInt64(@event.Time) / (TimeSpan.TicksPerMillisecond / 100)).ToLocalTime();
 
                         events.Add(@event);
                     }
