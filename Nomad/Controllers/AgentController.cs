@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nomad.Models;
@@ -17,8 +15,10 @@ namespace Nomad.Controllers
         [Route("/servers")]
         public async Task<IActionResult> Servers()
         {
+            var agentOperatorTask = GetAgentOperatorsAsync();
+
             var agents = await GetAgentsAsync();
-            agents.Operator = await GetAgentOperatorsAsync();
+            agents.Operator = await agentOperatorTask;
 
             return View("~/Views/Nomad/Servers.cshtml", agents);
         }
@@ -33,7 +33,7 @@ namespace Nomad.Controllers
 
         public async Task<Agent> GetAgentsAsync()
         {
-            var agent = new Agent();
+            Agent agent;
 
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/agent/members"))

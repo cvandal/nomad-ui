@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nomad.Extensions;
 
 namespace Nomad.Models
 {
@@ -27,7 +28,7 @@ namespace Nomad.Models
         public int CreateIndex { get; set; }
         public int ModifyIndex { get; set; }
         public int AllocModifyIndex { get; set; }
-        public object CreateTime { get; set; }
+        public long CreateTime { get; set; }
         public Stats Stats { get; set; }
         public List<Log> Logs { get; set; }
 
@@ -35,6 +36,8 @@ namespace Nomad.Models
         public int Pending { get; set; }
         public int Running { get; set; }
         public int Dead { get; set; }
+
+        public DateTime CreateDateTime => CreateTime.FromUnixTime();
     }
 
     public class SharedResources
@@ -63,7 +66,7 @@ namespace Nomad.Models
     public class Event
     {
         public string Type { get; set; }
-        public object Time { get; set; }
+        public long Time { get; set; }
         public bool FailsTask { get; set; }
         public string RestartReason { get; set; }
         public string SetupError { get; set; }
@@ -87,6 +90,8 @@ namespace Nomad.Models
         // Custom Properties
         public string AllocationId { get; set; }
         public string AllocationName { get; set; }
+
+        public DateTime DateTime => Time.FromUnixTime();
     }
 
     public class Metrics

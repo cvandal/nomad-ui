@@ -59,24 +59,16 @@ namespace Nomad.Controllers
 
         public async Task<List<Allocation>> GetEvaluationAllocationsAsync(string id)
         {
-            var allocations = new List<Allocation>();
-            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/evaluation/" + id + "/allocations"))
             using (HttpContent content = response.Content)
             {
                 string result = await content.ReadAsStringAsync();
 
-                allocations = JsonConvert.DeserializeObject<List<Allocation>>(result);
-            }
+                var allocations = JsonConvert.DeserializeObject<List<Allocation>>(result);
 
-            foreach (var allocation in allocations)
-            {
-                allocation.CreateTime = dateTime.AddTicks(Convert.ToInt64(allocation.CreateTime) / (TimeSpan.TicksPerMillisecond / 100)).ToLocalTime();
+                return allocations.OrderBy(a => a.Name).ToList();
             }
-
-            return allocations.OrderBy(a => a.Name).ToList();
         }
     }
 }

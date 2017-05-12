@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Nomad.Models
 {
@@ -14,87 +12,27 @@ namespace Nomad.Models
         public Agent Agent { get; set; }
 
         // Jobs
-        public int PendingJobs
-        {
-            get
-            {
-                return Jobs.Sum(j => j.Pending);
-            }
-        }
+        public int PendingJobs =>Jobs.Sum(j => j.Pending);
 
-        public int RunningJobs
-        {
-            get
-            {
-                return Jobs.Sum(j => j.Running);
-            }
-        }
+        public int RunningJobs => Jobs.Sum(j => j.Running);
 
-        public int DeadJobs
-        {
-            get
-            {
-                return Jobs.Sum(j => j.Dead);
-            }
-        }
+        public int DeadJobs => Jobs.Sum(j => j.Dead);
 
         // Allocations
-        public int PendingAllocations
-        {
-            get
-            {
-                return Allocations.Sum(a => a.Pending);
-            }
-        }
+        public int PendingAllocations => Allocations.Sum(a => a.Pending);
 
-        public int RunningAllocations
-        {
-            get
-            {
-                return Allocations.Sum(a => a.Running);
-            }
-        }
+        public int RunningAllocations => Allocations.Sum(a => a.Running);
 
-        public int DeadAllocations
-        {
-            get
-            {
-                return Allocations.Sum(a => a.Dead);
-            }
-        }
+        public int DeadAllocations => Allocations.Sum(a => a.Dead);
 
         // Nodes
-        public int UpNodes
-        {
-            get
-            {
-                return Nodes.Sum(n => n.Up);
-            }
-        }
+        public int UpNodes => Nodes.Sum(n => n.Up);
 
-        public int DownNodes
-        {
-            get
-            {
-                return Nodes.Sum(n => n.Down);
-            }
-        }
+        public int DownNodes => Nodes.Sum(n => n.Down);
 
         // Members
-        public int UpMembers
-        {
-            get
-            {
-                return Agent.Members.Sum(a => a.Up);
-            }
-        }
+        public int UpMembers => Agent.Members.Sum(a => a.Up);
 
-        public int DownMembers
-        {
-            get
-            {
-                return Agent.Members.Sum(a => a.Down);
-            }
-        }
+        public int DownMembers => Agent.Members.Sum(a => a.Down);
     }
 }

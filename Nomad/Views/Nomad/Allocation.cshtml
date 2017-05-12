@@ -1,9 +1,5 @@
 ﻿@model Nomad.Models.Allocation
 
-@{
-    var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-}
-
 <div class="row spacer">
     <div class="col-md-6">
         <div class="row spacer">
@@ -166,7 +162,7 @@
                                 @(@event.ValidationError)
                                 @(@event.VaultError)
                             </td>
-                            <td>@dateTime.AddTicks(Convert.ToInt64(@event.Time) / (TimeSpan.TicksPerMillisecond / 100)).ToLocalTime()</td>
+                            <td>@@event.DateTime</td>
                         </tr>
                     }
                 }
