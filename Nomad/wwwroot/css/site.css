@@ -1,0 +1,162 @@
+﻿* {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+body {
+    background-color: #1e1e1e;
+}
+
+h2 {
+    padding-bottom: 5px;
+    color: #dfdfdf;
+    border-bottom: solid 1px #333;
+}
+
+a,
+a:hover,
+a:visited,
+a:focus {
+    color: #1fb58f;
+    text-decoration: none;
+}
+
+.btn-link,
+.btn-link:hover,
+.btn-link:focus {
+    color: #1e1e1e;
+    background-color: #1fb58f;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.header-nav {
+    margin-bottom: 20px;
+    background-color: #1fb58f;
+}
+
+.header-nav > .nav-link {
+    padding: 15px;
+    color: #1e1e1e;
+}
+
+.header-nav > .nav-link:hover,
+.header-nav > .active
+ {
+    color: #dfdfdf;
+    background-color: #1e1e1e;
+}
+
+.logs-nav {
+    margin-bottom: 20px;
+    border: none;
+}
+
+.logs-nav > .nav-item {
+    margin-right: 10px;
+}
+
+.logs-nav > .nav-item > .nav-link {
+    color: #1fb58f;
+    background-color: #1e1e1e;
+    padding: 15px;
+    border: solid 1px #333;
+}
+
+.logs-nav > .nav-item > .nav-link:hover,
+.logs-nav > .nav-item > .active {
+    color: #1e1e1d;
+    background-color: #1fb58f;
+    border: solid 1px #1fb58f;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > td {
+    color: #dfdfdf;
+    border: none;
+}
+
+.table > tbody > tr:hover {
+    background-color: #333;
+}
+
+.list-group-item {
+    color: #dfdfdf;
+    background-color: #1e1e1e;
+    border: none;
+}
+
+.hljs {
+    background-color: #1e1e1e;
+}
+
+.hljs,
+.hljs-subst {
+    color: #dfdfdf;
+}
+
+.hljs-type,
+.hljs-string,
+.hljs-number,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+    color: #1fb58f;
+}
+
+.hljs-literal {
+    color: #eab126;
+}
+
+#log-wrapper {
+    padding: 0 20px;
+}
+
+#log-wrapper > pre {
+    white-space: pre-wrap;
+    max-height: 700px;
+}
+
+#attributeModal > .modal-dialog > .modal-content {
+    background-color: #1fb58f;
+}
+
+#attributeModal > .modal-dialog > .modal-content > .modal-body {
+    margin: 0;
+    padding: 1px;
+}
+
+#attributeModal > .modal-dialog > .modal-content > .modal-body > ul {
+    margin: 0;
+}
+
+#attributeModal > .modal-dialog > .modal-content > .modal-body > ul > li {
+    word-wrap: break-word;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.fixed-height-200 {
+    height: 200px;
+}
+
+.spacer {
+    margin-bottom: 50px;
+}
+
+.border {
+    border: solid 1px red;
+}

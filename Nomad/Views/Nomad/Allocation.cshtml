@@ -1,0 +1,185 @@
+﻿@model Nomad.Models.Allocation
+
+@{
+    var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+}
+
+<div class="row spacer">
+    <div class="col-md-6">
+        <div class="row spacer">
+            <div class="col-md-6">
+                <h2>Allocation Properties</h2>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>ID</strong>: @Model.ID</li>
+                    <li class="list-group-item"><strong>Name</strong>: @Model.Name</li>
+                    <li class="list-group-item"><strong>Job ID</strong>:&nbsp;<a href="/job?id=@Model.JobID">@Model.JobID</a></li>
+                    <li class="list-group-item"><strong>Evaluation ID</strong>:&nbsp;<a href="/evaluation?id=@Model.EvalID">@Model.EvalID</a></li>
+                    <li class="list-group-item"><strong>Node ID</strong>:&nbsp;<a href="/client?id=@Model.NodeID">@Model.NodeID</a></li>
+                    <li class="list-group-item"><strong>Desired Status</strong>: @Model.DesiredStatus</li>
+                    <li class="list-group-item"><strong>Client Status</strong>: @Model.ClientStatus</li>
+                    <li class="list-group-item"><strong>Create Time</strong>: @Model.CreateTime</li>
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Resources</h2>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>CPU (MHz)</strong>: @Model.Resources.CPU</li>
+                    <li class="list-group-item"><strong>Memory (MB)</strong>: @Model.Resources.MemoryMB</li>
+                    <li class="list-group-item"><strong>Disk (MB)</strong>: @Model.Resources.DiskMB</li>
+                    @foreach (var network in Model.Resources.Networks)
+                    {
+                        <li class="list-group-item"><strong>Network (Mbps)</strong>: @network.MBits</li>
+                        <li class="list-group-item"><strong>Device</strong>: @network.Device</li>
+                        <li class="list-group-item"><strong>IP</strong>: @network.IP</li>
+                        @foreach (var port in network.DynamicPorts)
+                        {
+                            <li class="list-group-item"><strong>Port</strong>: @port.Value</li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="row spacer">
+            <div class="col-md-6">
+                <h2>CPU Utilisation</h2>
+                <canvas id="cpuChart" height="200"></canvas>
+                <script>
+                    var ctx = document.getElementById("cpuChart");
+                    var myChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ["Idle %", "Active %"],
+                            datasets: [{
+                                data: [@(100 - Model.Stats.ResourceUsage.CpuStats.Percent), @Model.Stats.ResourceUsage.CpuStats.Percent],
+                                backgroundColor: ['#1fb58f', '#eab126'],
+                                hoverBackgroundColor: ['#1fb58f', '#eab126'],
+                                borderColor: ['#1e1e1e', '#1e1e1e']
+                            }]
+                        },
+                        options: {
+                            cutoutPercentage: 75,
+                            legend: {
+                                labels: {
+                                    fontColor: "#dfdfdf"
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Memory Utilisation</h2>
+                <canvas id="memChart" height="200"></canvas>
+                <script>
+                    var ctx = document.getElementById("memChart");
+                    var myChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ["Available MB", "Consumed MB"],
+                            datasets: [{
+                                data: [@(Model.Resources.MemoryMB - ((Model.Stats.ResourceUsage.MemoryStats.MaxUsage / 1024f) / 1024f)), @((Model.Stats.ResourceUsage.MemoryStats.MaxUsage / 1024f) / 1024f)],
+                                backgroundColor: ['#1fb58f', '#eab126'],
+                                hoverBackgroundColor: ['#1fb58f', '#eab126'],
+                                borderColor: ['#1e1e1e', '#1e1e1e']
+                            }]
+                        },
+                        options: {
+                            cutoutPercentage: 75,
+                            legend: {
+                                labels: {
+                                    fontColor: "#dfdfdf"
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <h2>Logs</h2>
+        <ul class="nav nav-tabs logs-nav">
+            @foreach (var log in Model.Logs.OrderBy(l => l.Name))
+            {
+                <li class="nav-item"><a class="nav-link log" href="#">@log.Name</a></li>
+            }
+        </ul>
+
+        <div id="log-wrapper">
+            <pre><code id="log"></code></pre>
+        </div>
+
+        <script>
+            $('.log').on("click", function () {
+                $('.log').removeClass('active');
+                $(this).addClass('active');
+
+                $('#log').html('<img src="images/loading.gif" alt="Loading..." />');
+
+                $.get("/allocation/log?client=@Model.Resources.Networks.FirstOrDefault().IP&id=@Model.ID&log=" + $(this).text(), function (content) {
+                    if (content) {
+                        $('#log').html(content);
+                    }
+                    else {
+                        $('#log').html("File is empty.");
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>
+
+<div class="row spacer">
+    <div class="col-md-12">
+        <h2>Task Events</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Message</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var key in Model.TaskStates.Keys)
+                {
+                    @foreach (var @event in Model.TaskStates[key].Events.OrderByDescending(t => t.Time))
+                    {
+                        <tr>
+                            <td>@Model.Name</td>
+                            <td>@(@event.Type)</td>
+                            <td>
+                                @(@event.DownloadError)
+                                @(@event.DriverError)
+                                @(@event.DriverMessage)
+                                @(@event.KillError)
+                                @(@event.KillReason)
+                                @(@event.Message)
+                                @(@event.RestartReason)
+                                @(@event.SetupError)
+                                @(@event.TaskSignalReason)
+                                @(@event.ValidationError)
+                                @(@event.VaultError)
+                            </td>
+                            <td>@dateTime.AddTicks(Convert.ToInt64(@event.Time) / (TimeSpan.TicksPerMillisecond / 100)).ToLocalTime()</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
+        <div id="raw" class="panel-body panel-collapse collapse">
+            <pre><code class="json">@ViewBag.Json</code></pre>
+        </div>
+    </div>
+</div>

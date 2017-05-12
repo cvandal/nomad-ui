@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Nomad.Models.Job>
+
+<h2>Jobs</h2>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td><a href="/job?id=@job.ID">@job.ID</a></td>
+                        <td>@job.Name</td>
+                        <td>@job.Type</td>
+                        <td>@job.Priority</td>
+                        <td>@job.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

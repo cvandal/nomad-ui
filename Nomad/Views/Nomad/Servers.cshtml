@@ -1,0 +1,38 @@
+﻿@model Nomad.Models.Agent
+
+<h2>Servers</h2>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Port</th>
+                    <th>Status</th>
+                    <th>Voter</th>
+                    <th>Leader</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.Members)
+                {
+                    <tr>
+                        <td><a href="/server?ip=@member.Addr">@member.Name</a></td>
+                        <td>@member.Addr</td>
+                        <td>@member.Port</td>
+                        <td>@member.Status</td>
+                        @foreach (var server in Model.Operator.Servers)
+                        {
+                            @if (server.Node == member.Name)
+                            {
+                                <td>@server.Voter</td>
+                                <td>@server.Leader</td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

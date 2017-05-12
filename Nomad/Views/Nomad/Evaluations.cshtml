@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Nomad.Models.Evaluation>
+
+<h2>Evaluations</h2>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Job ID</th>
+                    <th>Type</th>
+                    <th>Priority</th>
+                    <th>Triggered By</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evaluation in Model)
+                {
+                    <tr>
+                        <td><a href="/evaluation?id=@evaluation.ID">@evaluation.ID</a></td>
+                        <td>@evaluation.JobID</td>
+                        <td>@evaluation.Type</td>
+                        <td>@evaluation.Priority</td>
+                        <td>@evaluation.TriggeredBy</td>
+                        <td>@evaluation.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

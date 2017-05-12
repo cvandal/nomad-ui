@@ -1,0 +1,154 @@
+﻿@model Nomad.Models.Dashboard
+
+<div class="row spacer">
+    <div class="col-md-3">
+        <h2>Job States</h2>
+        <canvas id="jobsChart" height="200"></canvas>
+        <script>
+            var ctx = document.getElementById("jobsChart");
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Pending", "Running", "Dead"],
+                    datasets: [{
+                        data: [@Model.PendingJobs, @Model.RunningJobs, @Model.DeadJobs],
+                        backgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                        hoverBackgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                        borderColor: ['#1e1e1e', '#1e1e1e', '#1e1e1e']
+                    }]
+                },
+                options: {
+                    cutoutPercentage: 75,
+                    legend: {
+                        labels: {
+                            fontColor: "#dfdfdf"
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+
+    <div class="col-md-3">
+        <h2>Task States</h2>
+        <canvas id="allocationsChart" height="200"></canvas>
+        <script>
+            var ctx = document.getElementById("allocationsChart");
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Pending", "Running", "Dead"],
+                    datasets: [{
+                        data: [@Model.PendingAllocations, @Model.RunningAllocations, @Model.DeadAllocations],
+                        backgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                        hoverBackgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                        borderColor: ['#1e1e1e', '#1e1e1e', '#1e1e1e']
+                    }]
+                },
+                options: {
+                    cutoutPercentage: 75,
+                    legend: {
+                        labels: {
+                            fontColor: "#dfdfdf"
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+
+    <div class="col-md-3">
+        <h2>Client States</h2>
+        <canvas id="clientsChart" height="200"></canvas>
+        <script>
+            var ctx = document.getElementById("clientsChart");
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Up", "Down"],
+                    datasets: [{
+                        data: [@Model.UpNodes, @Model.DownNodes],
+                        backgroundColor: ['#1fb58f', '#f24c4e'],
+                        hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
+                        borderColor: ['#1e1e1e', '#1e1e1e']
+                    }]
+                },
+                options: {
+                    cutoutPercentage: 75,
+                    legend: {
+                        labels: {
+                            fontColor: "#dfdfdf"
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+
+    <div class="col-md-3">
+        <h2>Server States</h2>
+        <canvas id="serversChart" height="200"></canvas>
+        <script>
+            var ctx = document.getElementById("serversChart");
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Up", "Down"],
+                    datasets: [{
+                        data: [@Model.UpMembers, @Model.DownMembers],
+                        backgroundColor: ['#1fb58f', '#f24c4e'],
+                        hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
+                        borderColor: ['#1e1e1e', '#1e1e1e']
+                    }]
+                },
+                options: {
+                    cutoutPercentage: 75,
+                    legend: {
+                        labels: {
+                            fontColor: "#dfdfdf"
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Task Events</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Message</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var @event in Model.Events.Take(20))
+                {
+                    <tr>
+                        <td><a href="/allocation?id=@(@event.AllocationId)">@(@event.AllocationName)</a></td>
+                        <td>@(@event.Type)</td>
+                        <td>
+                            @(@event.DownloadError)
+                            @(@event.DriverError)
+                            @(@event.DriverMessage)
+                            @(@event.KillError)
+                            @(@event.KillReason)
+                            @(@event.Message)
+                            @(@event.RestartReason)
+                            @(@event.SetupError)
+                            @(@event.TaskSignalReason)
+                            @(@event.ValidationError)
+                            @(@event.VaultError)
+                        </td>
+                        <td>@(@event.Time)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,172 @@
+﻿@model Nomad.Models.Node
+
+@{
+    int count = 0;
+}
+
+<div class="row spacer">
+    <div class="col-md-4">
+        <h2>Client Properties</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID</strong>: @Model.ID</li>
+            <li class="list-group-item"><strong>Name</strong>: @Model.Name</li>
+            <li class="list-group-item"><strong>Datacenter</strong>: @Model.Datacenter</li>
+            <li class="list-group-item"><strong>Address</strong>: @Model.HTTPAddr</li>
+            <li class="list-group-item"><strong>TLS</strong>: @Model.TLSEnabled</li>
+            <li class="list-group-item"><strong>Status</strong>: @Model.Status</li>
+            <li class="list-group-item"><strong>Drain</strong>: @Model.Drain</li>
+            <li class="list-group-item"><strong>Meta</strong>: @Model.Meta</li>
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Resources</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>CPU (MHz)</strong>: @Model.Resources.CPU</li>
+            <li class="list-group-item"><strong>Memory (MB)</strong>: @Model.Resources.MemoryMB</li>
+            <li class="list-group-item"><strong>Disk (MB)</strong>: @Model.Resources.DiskMB</li>
+            <li class="list-group-item"><strong>IOPS</strong>: @Model.Resources.IOPS</li>
+            @foreach (var network in Model.Resources.Networks)
+            {
+                <li class="list-group-item"><strong>Device</strong>: @network.Device</li>
+                <li class="list-group-item"><strong>Network (Mbps)</strong>: @network.MBits</li>
+                <li class="list-group-item"><strong>IP</strong>: @network.IP</li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Attributes</h2>
+        <ul class="list-group">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Operating System Version</strong>: @Model.Attributes.Where(a => a.Key == "os.name").Select(a => a.Value).FirstOrDefault() @Model.Attributes.Where(a => a.Key == "os.version").Select(a => a.Value).FirstOrDefault()</li>
+                <li class="list-group-item"><strong>Docker Version</strong>: @Model.Attributes.Where(a => a.Key == "driver.docker.version").Select(a => a.Value).FirstOrDefault()</li>
+                <li class="list-group-item"><strong>Nomad Version</strong>: @Model.Attributes.Where(a => a.Key == "nomad.version").Select(a => a.Value).FirstOrDefault()</li>
+                <li class="list-group-item"><strong>Consul Version</strong>: @Model.Attributes.Where(a => a.Key == "consul.version").Select(a => a.Value).FirstOrDefault()</li>
+                <li class="list-group-item"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#attributeModal">More...</button></li>
+            </ul>
+        </ul>
+
+        <div id="attributeModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            @foreach (var attribute in Model.Attributes.OrderBy(a => a.Key))
+                            {
+                                <li class="list-group-item"><strong>@attribute.Key</strong>: @attribute.Value</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row spacer">
+    @foreach (var cpu in Model.Stats.CPU)
+    {
+        @if (string.IsNullOrEmpty(cpu.CPU))
+        {
+            cpu.CPU = "CPU" + count;
+            count++;
+        }
+        
+        <div class="col-md-3">
+            <h2>@cpu.CPU.ToString().ToUpper() Utilisation</h2>
+            <canvas id="cpuChart" height="200"></canvas>
+            <script>
+                var ctx = document.getElementById("cpuChart");
+                var myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["Idle %", "Active %"],
+                        datasets: [{
+                            data: [@cpu.Idle, @cpu.Total],
+                            backgroundColor: ['#1fb58f', '#eab126'],
+                            hoverBackgroundColor: ['#1fb58f', '#eab126'],
+                            borderColor: ['#1e1e1e', '#1e1e1e']
+                        }]
+                    },
+                    options: {
+                        cutoutPercentage: 75,
+                        legend: {
+                            labels: {
+                                fontColor: "#dfdfdf"
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    }
+
+    <div class="col-md-3">
+        <h2>Memory Utilisation</h2>
+        <canvas id="memChart" height="200"></canvas>
+        <script>
+            var ctx = document.getElementById("memChart");
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ["Available MB", "Consumed MB"],
+                    datasets: [{
+                        data: [@Model.Stats.Memory.Available, @Model.Stats.Memory.Used],
+                        backgroundColor: ['#1fb58f', '#eab126'],
+                        hoverBackgroundColor: ['#1fb58f', '#eab126'],
+                        borderColor: ['#1e1e1e', '#1e1e1e']
+                    }]
+                },
+                options: {
+                    cutoutPercentage: 75,
+                    legend: {
+                        labels: {
+                            fontColor: "#dfdfdf"
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+</div>
+
+<div class="row spacer">
+    <div class="col-md-12">
+        <h2>Allocations</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Task Group</th>
+                    <th>Desired Status</th>
+                    <th>Client Status</th>
+                    <th>Create Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var allocation in Model.Allocations)
+                {
+                    <tr>
+                        <td><a href="/allocation?id=@allocation.ID">@allocation.ID</a></td>
+                        <td>@allocation.Name</td>
+                        <td>@allocation.TaskGroup</td>
+                        <td>@allocation.DesiredStatus</td>
+                        <td>@allocation.ClientStatus</td>
+                        <td>@allocation.CreateTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
+        <div id="raw" class="panel-body panel-collapse collapse">
+            <pre><code class="json">@ViewBag.Json</code></pre>
+        </div>
+    </div>
+</div>

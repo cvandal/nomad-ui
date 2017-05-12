@@ -1,0 +1,55 @@
+﻿@model Nomad.Models.Evaluation
+
+<div class="row spacer">
+    <div class="col-md-3">
+        <h2>Evaluation Properties</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID</strong>: @Model.ID</li>
+            <li class="list-group-item"><strong>Job ID</strong>:&nbsp;<a href="/job?id=@Model.JobID">@Model.JobID</a></li>
+            <li class="list-group-item"><strong>Type</strong>: @Model.Type</li>
+            <li class="list-group-item"><strong>Priority</strong>: @Model.Priority</li>
+            <li class="list-group-item"><strong>Triggered By</strong>: @Model.TriggeredBy</li>
+            <li class="list-group-item"><strong>Status</strong>: @Model.Status</li>
+        </ul>
+    </div>
+</div>
+
+<div class="row spacer">
+    <div class="col-md-12">
+        <h2>Allocations</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Task Group</th>
+                    <th>Desired Status</th>
+                    <th>Client Status</th>
+                    <th>Create Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var allocation in Model.Allocations)
+                {
+                    <tr>
+                        <td><a href="/allocation?id=@allocation.ID">@allocation.ID</a></td>
+                        <td>@allocation.Name</td>
+                        <td>@allocation.TaskGroup</td>
+                        <td>@allocation.DesiredStatus</td>
+                        <td>@allocation.ClientStatus</td>
+                        <td>@allocation.CreateTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
+        <div id="raw" class="panel-body panel-collapse collapse">
+            <pre><code class="json">@ViewBag.Json</code></pre>
+        </div>
+    </div>
+</div>

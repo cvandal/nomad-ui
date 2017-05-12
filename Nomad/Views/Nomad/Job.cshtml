@@ -1,0 +1,158 @@
+﻿@model Nomad.Models.Job
+
+<div class="row spacer">
+    <div class="col-md-4">
+        <h2>Job Properties</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>ID</strong>: @Model.ID</li>
+            <li class="list-group-item"><strong>Name</strong>: @Model.Name</li>
+            <li class="list-group-item"><strong>Region</strong>: @Model.Region</li>
+            <li class="list-group-item"><strong>Datacenters</strong>: @string.Join(",", Model.Datacenters)</li>
+            <li class="list-group-item"><strong>Type</strong>: @Model.Type</li>
+            <li class="list-group-item"><strong>Priority</strong>: @Model.Priority</li>
+            <li class="list-group-item"><strong>Status</strong>: @Model.Status</li>
+            <li class="list-group-item"><strong>Constraints</strong>: @if (Model.Constraints != null) { @Html.Raw(String.Join(",", Model.Constraints)) }</li>
+            <li class="list-group-item"><strong>Meta</strong>: @Model.Meta</li>
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Task Group Properties</h2>
+        <ul class="list-group">
+            @foreach (var taskGroup in Model.TaskGroups)
+            {
+                <li class="list-group-item"><strong>Name</strong>: @taskGroup.Name</li>
+                <li class="list-group-item"><strong>Count</strong>: @taskGroup.Count</li>
+                <li class="list-group-item"><strong>Restart Policy Mode</strong>: @taskGroup.RestartPolicy.Mode</li>
+                <li class="list-group-item"><strong>Restart Policy Attempts</strong>: @taskGroup.RestartPolicy.Attempts</li>
+                <li class="list-group-item"><strong>Constraints</strong>: @if (taskGroup.Constraints != null) { @Html.Raw(String.Join(",", taskGroup.Constraints)) }</li>
+                <li class="list-group-item"><strong>Meta</strong>: @taskGroup.Meta</li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Task Properties</h2>
+        <ul class="list-group">
+            @foreach (var taskGroup in Model.TaskGroups)
+            {
+                @foreach (var task in taskGroup.Tasks)
+                {
+                    <li class="list-group-item"><strong>Name</strong>: @task.Name</li>
+                    <li class="list-group-item"><strong>Driver</strong>: @task.Driver</li>
+                    <li class="list-group-item"><strong>Maximum Number of Log Files</strong>: @task.LogConfig.MaxFiles</li>
+                    <li class="list-group-item"><strong>Maximum Size of Log Files (MB)</strong>: @task.LogConfig.MaxFileSizeMB</li>
+                    <li class="list-group-item"><strong>CPU (MHz)</strong>: @task.Resources.CPU</li>
+                    <li class="list-group-item"><strong>Memory (MB)</strong>: @task.Resources.MemoryMB</li>
+                    @foreach (var network in task.Resources.Networks)
+                    {
+                        <li class="list-group-item"><strong>Network (Mbps)</strong>: @network.MBits</li>
+                    }
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="row spacer">
+    <div class="col-md-12">
+        <h2>Docker Properties</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Network Mode</th>
+                    <th>Command</th>
+                    <th>Arguments</th>
+                    <th>Environment Variables</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var taskGroup in Model.TaskGroups)
+                {
+                    @foreach (var task in taskGroup.Tasks)
+                    {
+                        <tr>
+                            <td>@task.Config.Image</td>
+                            <td>@task.Config.Network_Mode</td>
+                            <td>@if (task.Config.Command != null) { @task.Config.Command }</td>
+                            <td>@if (task.Config.Args != null) { @Html.Raw(String.Join("<br />", task.Config.Args)) }</td>
+                            <td>@if (task.Env != null) { @Html.Raw(String.Join("<br />", task.Env.Select(e => e.Key + " = " + e.Value))) }</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row spacer">
+    <div class="col-md-12">
+        <h2>Evaluations</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Job ID</th>
+                    <th>Type</th>
+                    <th>Priority</th>
+                    <th>Triggered By</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evaluation in Model.Evaluations)
+                {
+                    <tr>
+                        <td><a href="/evaluation?id=@evaluation.ID">@evaluation.ID</a></td>
+                        <td>@evaluation.JobID</td>
+                        <td>@evaluation.Type</td>
+                        <td>@evaluation.Priority</td>
+                        <td>@evaluation.TriggeredBy</td>
+                        <td>@evaluation.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row spacer">
+    <div class="col-md-12">
+        <h2>Allocations</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Task Group</th>
+                    <th>Desired Status</th>
+                    <th>Client Status</th>
+                    <th>Create Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var allocation in Model.Allocations)
+                {
+                    <tr>
+                        <td><a href="/allocation?id=@allocation.ID">@allocation.ID</a></td>
+                        <td>@allocation.Name</td>
+                        <td>@allocation.TaskGroup</td>
+                        <td>@allocation.DesiredStatus</td>
+                        <td>@allocation.ClientStatus</td>
+                        <td>@allocation.CreateTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
+            <div id="raw" class="panel-body panel-collapse collapse">
+                <pre><code class="json">@ViewBag.Json</code></pre>
+            </div>
+    </div>
+</div>
