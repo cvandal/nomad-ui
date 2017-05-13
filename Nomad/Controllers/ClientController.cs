@@ -10,14 +10,14 @@ using Newtonsoft.Json.Linq;
 
 namespace Nomad.Controllers
 {
-    public class NodeController : Controller
+    public class ClientController : Controller
     {
-        public static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
 
         [Route("/clients")]
         public async Task<IActionResult> Clients()
         {
-            var clients = await GetNodesAsync();
+            var clients = await GetClientsAsync();
 
             return View("~/Views/Nomad/Clients.cshtml", clients);
         }
@@ -25,16 +25,16 @@ namespace Nomad.Controllers
         [Route("/client")]
         public async Task<IActionResult> Client(string id)
         {
-            var client = await GetNodeAsync(id);
-            client.Stats = await GetNodeStatsAsync(client.Resources.Networks.FirstOrDefault().IP);
-            client.Allocations = await GetNodeAllocationsAsync(id);
+            var client = await GetClientAsync(id);
+            client.Stats = await GetClientStatsAsync(client.Resources.Networks.FirstOrDefault().IP);
+            client.Allocations = await GetClientAllocationsAsync(id);
 
             return View("~/Views/Nomad/Client.cshtml", client);
         }
 
-        public async Task<List<Node>> GetNodesAsync()
+        public async Task<List<Client>> GetClientsAsync()
         {
-            var nodes = new List<Node>();
+            var clients = new List<Client>();
 
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/nodes"))
@@ -42,19 +42,19 @@ namespace Nomad.Controllers
             {
                 string result = await content.ReadAsStringAsync();
 
-                nodes = JsonConvert.DeserializeObject<List<Node>>(result);
+                clients = JsonConvert.DeserializeObject<List<Client>>(result);
             }
 
-            foreach (var node in nodes)
+            foreach (var client in clients)
             {
-                if (node.Status == "ready") { node.Up++; }
-                if (node.Status == "down") { node.Down++; }
+                if (client.Status == "ready") { client.Up++; }
+                if (client.Status == "down") { client.Down++; }
             }
 
-            return nodes.OrderBy(n => n.Name).ToList();
+            return clients.OrderBy(n => n.Name).ToList();
         }
 
-        public async Task<Node> GetNodeAsync(string id)
+        public async Task<Client> GetClientAsync(string id)
         {
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/node/" + id))
@@ -64,11 +64,11 @@ namespace Nomad.Controllers
 
                 ViewBag.Json = JToken.Parse(result).ToString(Formatting.Indented);
 
-                return JsonConvert.DeserializeObject<Node>(result);
+                return JsonConvert.DeserializeObject<Client>(result);
             }
         }
 
-        public async Task<Stats> GetNodeStatsAsync(string ip)
+        public async Task<Stats> GetClientStatsAsync(string ip)
         {
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync("http://" + ip + ":4646/v1/client/stats"))
@@ -80,7 +80,7 @@ namespace Nomad.Controllers
             }
         }
 
-        public async Task<List<Allocation>> GetNodeAllocationsAsync(string id)
+        public async Task<List<Allocation>> GetClientAllocationsAsync(string id)
         {
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/node/" + id + "/allocations"))

@@ -2,7 +2,7 @@
 
 namespace Nomad.Models
 {
-    public class Node
+    public class Client
     {
         public string ID { get; set; }
         public string SecretID { get; set; }
