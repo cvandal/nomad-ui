@@ -41,7 +41,7 @@ namespace Nomad
             }
             else
             {
-                app.UseExceptionHandler("/Shared/Error");
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();
