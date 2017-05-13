@@ -12,7 +12,8 @@ namespace Nomad.Controllers
 {
     public class JobController : Controller
     {
-        public static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static HttpClient Client = new HttpClient();
 
         [Route("/jobs")]
         public async Task<IActionResult> Jobs()
@@ -40,14 +41,9 @@ namespace Nomad.Controllers
         {
             List<Job> jobs;
 
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/jobs"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
-
-                jobs = JsonConvert.DeserializeObject<List<Job>>(result);
-            }
+            var result = await Client.GetAsync(NomadUrl + "/v1/jobs").Result.Content.ReadAsStringAsync();
+            
+            jobs = JsonConvert.DeserializeObject<List<Job>>(result);
 
             foreach (var job in jobs)
             {
@@ -61,42 +57,25 @@ namespace Nomad.Controllers
 
         public async Task<Job> GetJobAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/job/" + id))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await Client.GetAsync(NomadUrl + "/v1/job/" + id).Result.Content.ReadAsStringAsync();
 
-                ViewBag.Json = JToken.Parse(result).ToString(Formatting.Indented);
+            ViewBag.Json = JToken.Parse(result).ToString(Formatting.Indented);
 
-                return JsonConvert.DeserializeObject<Job>(result);
-            }
+            return JsonConvert.DeserializeObject<Job>(result);
         }
 
         public async Task<List<Evaluation>> GetJobEvaluationsAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/job/" + id + "/evaluations"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await Client.GetAsync(NomadUrl + "/v1/job/" + id + "/evaluations").Result.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<List<Evaluation>>(result).OrderBy(e => e.JobID).ToList();
-            }
+            return JsonConvert.DeserializeObject<List<Evaluation>>(result).OrderBy(e => e.JobID).ToList();
         }
 
         public async Task<List<Allocation>> GetJobAllocationsAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/job/" + id + "/allocations"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
-
-                var allocations = JsonConvert.DeserializeObject<List<Allocation>>(result);
-
-                return allocations.OrderBy(a => a.Name).ToList();
-            }
+            var result = await Client.GetAsync(NomadUrl + "/v1/job/" + id + "/allocations").Result.Content.ReadAsStringAsync();
+            
+            return JsonConvert.DeserializeObject<List<Allocation>>(result).OrderBy(a => a.Name).ToList();
         }
     }
 }
