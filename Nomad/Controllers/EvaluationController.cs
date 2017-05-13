@@ -12,7 +12,7 @@ namespace Nomad.Controllers
 {
     public class EvaluationController : Controller
     {
-        public static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
 
         [Route("/evaluations")]
         public async Task<IActionResult> Evaluations()

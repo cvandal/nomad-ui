@@ -12,7 +12,7 @@ namespace Nomad.Controllers
 {
     public class AllocationController : Controller
     {
-        public static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
 
         [Route("/allocations")]
         public async Task<IActionResult> Allocations()
@@ -26,8 +26,8 @@ namespace Nomad.Controllers
         public async Task<IActionResult> Allocation(string id)
         {
             var allocation = await GetAllocationAsync(id);
-            allocation.Stats = await GetAllocationStatsAsync(allocation.Resources.Networks.FirstOrDefault().IP, allocation.ID);
-            allocation.Logs = await GetAllocationLogsAsync(allocation.Resources.Networks.FirstOrDefault().IP, allocation.ID);
+            allocation.Stats = await GetAllocationStatsAsync(allocation.Resources.Networks.FirstOrDefault().IP, id);
+            allocation.Logs = await GetAllocationLogsAsync(allocation.Resources.Networks.FirstOrDefault().IP, id);
 
             return View("~/Views/Nomad/Allocation.cshtml", allocation);
         }
