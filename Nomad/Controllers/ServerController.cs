@@ -8,35 +8,35 @@ using Newtonsoft.Json.Linq;
 
 namespace Nomad.Controllers
 {
-    public class AgentController : Controller
+    public class ServerController : Controller
     {
-        public static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
 
         [Route("/servers")]
         public async Task<IActionResult> Servers()
         {
-            var agentOperatorTask = GetAgentOperatorsAsync();
+            var serverOperatorTask = GetServerOperatorsAsync();
 
-            var agents = await GetAgentsAsync();
-            agents.Operator = await agentOperatorTask;
+            var servers = await GetServersAsync();
+            servers.Operator = await serverOperatorTask;
 
-            return View("~/Views/Nomad/Servers.cshtml", agents);
+            return View("~/Views/Nomad/Servers.cshtml", servers);
         }
 
         [Route("/server")]
-        public async Task<IActionResult> Agent(string ip)
+        public async Task<IActionResult> Server(string ip)
         {
-            var agentOperatorTask = GetAgentOperatorsAsync();
+            var serverOperatorTask = GetServerOperatorsAsync();
             
-            var agent = await GetAgentAsync(ip);
-            agent.Operator = await agentOperatorTask;
+            var server = await GetServerAsync(ip);
+            server.Operator = await serverOperatorTask;
 
-            return View("~/Views/Nomad/Server.cshtml", agent);
+            return View("~/Views/Nomad/Server.cshtml", server);
         }
 
-        public async Task<Agent> GetAgentsAsync()
+        public async Task<Server> GetServersAsync()
         {
-            Agent agent;
+            Server server;
 
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/agent/members"))
@@ -44,19 +44,19 @@ namespace Nomad.Controllers
             {
                 string result = await content.ReadAsStringAsync();
 
-                agent = JsonConvert.DeserializeObject<Agent>(result);
+                server = JsonConvert.DeserializeObject<Server>(result);
             }
 
-            foreach (var member in agent.Members)
+            foreach (var member in server.Members)
             {
                 if (member.Status == "alive") { member.Up++; }
                 if (member.Status == "dead") { member.Down++; }
             }
 
-            return agent;
+            return server;
         }
 
-        public async Task<Agent> GetAgentAsync(string ip)
+        public async Task<Server> GetServerAsync(string ip)
         {
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync("http://" + ip + ":4646/v1/agent/self"))
@@ -66,11 +66,11 @@ namespace Nomad.Controllers
 
                 ViewBag.Json = JToken.Parse(result).ToString(Formatting.Indented);
 
-                return JsonConvert.DeserializeObject<Agent>(result);
+                return JsonConvert.DeserializeObject<Server>(result);
             }
         }
 
-        public async Task<Operator> GetAgentOperatorsAsync()
+        public async Task<Operator> GetServerOperatorsAsync()
         {
             using (HttpClient client = new HttpClient())
             using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/operator/raft/configuration"))

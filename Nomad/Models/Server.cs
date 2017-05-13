@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace Nomad.Models
 {
-    public class Agent
+    public class Server
     {
         public string ServerName { get; set; }
         public string ServerRegion { get; set; }
         public string ServerDC { get; set; }
         public List<Member> Members { get; set; }
+        public Member Member { get; set; }
         public Operator Operator { get; set; }
         public Config Config { get; set; }
-        public Agent Member { get; set; }
         public Stats Stats { get; set; }
         public string Name { get; set; }
         public string Addr { get; set; }
@@ -53,10 +53,10 @@ namespace Nomad.Models
 
     public class Operator
     {
-        public List<Server> Servers { get; set; }
+        public List<Server2> Servers { get; set; }
     }
 
-    public class Server
+    public class Server2
     {
         public string Address { get; set; }
         public string ID { get; set; }
