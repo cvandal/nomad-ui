@@ -11,17 +11,17 @@ namespace Nomad.Controllers
         {
             var jobsTask = new JobController().GetJobsAsync();
             var allocationsTask = new AllocationController().GetAllocationsAsync();
-            var nodesTask = new NodeController().GetNodesAsync();
-            var agentTask = new AgentController().GetAgentsAsync();
+            var clientsTask = new ClientController().GetClientsAsync();
+            var serverTask = new ServerController().GetServersAsync();
 
-            await Task.WhenAll(jobsTask, allocationsTask, nodesTask, agentTask);
+            await Task.WhenAll(jobsTask, allocationsTask, clientsTask, serverTask);
 
             var dashboard = new Dashboard
             {
                 Jobs = await jobsTask,
                 Allocations = await allocationsTask,
-                Nodes = await nodesTask,
-                Agent = await agentTask,
+                Clients = await clientsTask,
+                Server = await serverTask,
                 Events = new AllocationController().GetAllocationEvents(await allocationsTask)
             };
 

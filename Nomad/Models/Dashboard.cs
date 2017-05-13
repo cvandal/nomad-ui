@@ -8,8 +8,8 @@ namespace Nomad.Models
         public List<Job> Jobs { get; set; }
         public List<Allocation> Allocations { get; set; }
         public List<Event> Events { get; set; }
-        public List<Node> Nodes { get; set; }
-        public Agent Agent { get; set; }
+        public List<Client> Clients { get; set; }
+        public Server Server { get; set; }
 
         // Jobs
         public int PendingJobs =>Jobs.Sum(j => j.Pending);
@@ -25,14 +25,14 @@ namespace Nomad.Models
 
         public int DeadAllocations => Allocations.Sum(a => a.Dead);
 
-        // Nodes
-        public int UpNodes => Nodes.Sum(n => n.Up);
+        // Clients
+        public int UpClients => Clients.Sum(n => n.Up);
 
-        public int DownNodes => Nodes.Sum(n => n.Down);
+        public int DownClients => Clients.Sum(n => n.Down);
 
         // Members
-        public int UpMembers => Agent.Members.Sum(a => a.Up);
+        public int UpMembers => Server.Members.Sum(a => a.Up);
 
-        public int DownMembers => Agent.Members.Sum(a => a.Down);
+        public int DownMembers => Server.Members.Sum(a => a.Down);
     }
 }
