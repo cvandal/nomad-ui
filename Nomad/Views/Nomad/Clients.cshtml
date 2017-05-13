@@ -1,8 +1,9 @@
-﻿@model IEnumerable<Nomad.Models.Node>
+﻿@model IEnumerable<Nomad.Models.Client>
 
-<h2>Clients</h2>
 <div class="row">
     <div class="col-md-12">
+        <h4>Clients</h4>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -14,14 +15,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var node in Model)
+                @foreach (var client in Model)
                 {
                     <tr>
-                        <td><a href="/client?id=@node.ID">@node.ID</a></td>
-                        <td>@node.Name</td>
-                        <td>@node.Datacenter</td>
-                        <td>@node.Drain</td>
-                        <td>@node.Status</td>
+                        <td><a href="/client?id=@client.ID">@client.ID</a></td>
+                        <td>@client.Name</td>
+                        <td>@client.Datacenter</td>
+                        <td>@client.Drain</td>
+                        <td>@client.Status</td>
                     </tr>
                 }
             </tbody>

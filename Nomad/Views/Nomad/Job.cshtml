@@ -2,7 +2,8 @@
 
 <div class="row spacer">
     <div class="col-md-4">
-        <h2>Job Properties</h2>
+        <h4>Job Properties</h4>
+
         <ul class="list-group">
             <li class="list-group-item"><strong>ID</strong>: @Model.ID</li>
             <li class="list-group-item"><strong>Name</strong>: @Model.Name</li>
@@ -17,7 +18,8 @@
     </div>
 
     <div class="col-md-4">
-        <h2>Task Group Properties</h2>
+        <h4>Task Group Properties</h4>
+
         <ul class="list-group">
             @foreach (var taskGroup in Model.TaskGroups)
             {
@@ -32,7 +34,8 @@
     </div>
 
     <div class="col-md-4">
-        <h2>Task Properties</h2>
+        <h4>Task Properties</h4>
+
         <ul class="list-group">
             @foreach (var taskGroup in Model.TaskGroups)
             {
@@ -56,7 +59,8 @@
 
 <div class="row spacer">
     <div class="col-md-12">
-        <h2>Docker Properties</h2>
+        <h4>Docker Properties</h4>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -88,7 +92,8 @@
 
 <div class="row spacer">
     <div class="col-md-12">
-        <h2>Evaluations</h2>
+        <h4>Evaluations</h4>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -119,7 +124,8 @@
 
 <div class="row spacer">
     <div class="col-md-12">
-        <h2>Allocations</h2>
+        <h4>Allocations</h4>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -150,9 +156,10 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
-            <div id="raw" class="panel-body panel-collapse collapse">
-                <pre><code class="json">@ViewBag.Json</code></pre>
-            </div>
+        <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
+        
+        <div id="json" class="collapse">
+            <pre><code>@ViewBag.Json</code></pre>
+        </div>
     </div>
 </div>

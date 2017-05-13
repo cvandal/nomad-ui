@@ -2,7 +2,7 @@
 
 <div class="row spacer">
     <div class="col-md-3">
-        <h2>Job States</h2>
+        <h4>Job States</h4>
         <canvas id="jobsChart" height="200"></canvas>
         <script>
             var ctx = document.getElementById("jobsChart");
@@ -30,7 +30,7 @@
     </div>
 
     <div class="col-md-3">
-        <h2>Task States</h2>
+        <h4>Allocation States</h4>
         <canvas id="allocationsChart" height="200"></canvas>
         <script>
             var ctx = document.getElementById("allocationsChart");
@@ -58,7 +58,7 @@
     </div>
 
     <div class="col-md-3">
-        <h2>Client States</h2>
+        <h4>Client States</h4>
         <canvas id="clientsChart" height="200"></canvas>
         <script>
             var ctx = document.getElementById("clientsChart");
@@ -67,7 +67,7 @@
                 data: {
                     labels: ["Up", "Down"],
                     datasets: [{
-                        data: [@Model.UpNodes, @Model.DownNodes],
+                        data: [@Model.UpClients, @Model.DownClients],
                         backgroundColor: ['#1fb58f', '#f24c4e'],
                         hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
                         borderColor: ['#1e1e1e', '#1e1e1e']
@@ -86,7 +86,7 @@
     </div>
 
     <div class="col-md-3">
-        <h2>Server States</h2>
+        <h4>Server States</h4>
         <canvas id="serversChart" height="200"></canvas>
         <script>
             var ctx = document.getElementById("serversChart");
@@ -116,7 +116,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Task Events</h2>
+        <h4>Allocation Events</h4>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -127,7 +127,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var @event in Model.Events.Take(20))
+                @foreach (var @event in Model.Events.Take(10))
                 {
                     <tr>
                         <td><a href="/allocation?id=@(@event.AllocationId)">@(@event.AllocationName)</a></td>

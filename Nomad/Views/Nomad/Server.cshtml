@@ -1,8 +1,9 @@
-﻿@model Nomad.Models.Agent
+﻿@model Nomad.Models.Server
 
 <div class="row spacer">
     <div class="col-md-4">
-        <h2>Server Properties</h2>
+        <h4>Server Properties</h4>
+
         <ul class="list-group">
             <li class="list-group-item"><strong>Name</strong>: @Model.Member.Name</li>
             <li class="list-group-item"><strong>Address</strong>: @Model.Member.Addr</li>
@@ -20,7 +21,8 @@
     </div>
 
     <div class="col-md-4">
-        <h2>Configuration</h2>
+        <h4>Configuration</h4>
+
         <ul class="list-group">
             <li class="list-group-item"><strong>Region</strong>: @Model.Config.Region</li>
             <li class="list-group-item"><strong>Datacenter</strong>: @Model.Config.Datacenter</li>
@@ -37,9 +39,10 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
-        <div id="raw" class="panel-body panel-collapse collapse">
-            <pre><code class="json">@ViewBag.Json</code></pre>
+        <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
+        
+        <div id="json" class="collapse">
+            <pre><code>@ViewBag.Json</code></pre>
         </div>
     </div>
 </div>

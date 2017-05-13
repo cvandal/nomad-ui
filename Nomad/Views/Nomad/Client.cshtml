@@ -1,4 +1,4 @@
-﻿@model Nomad.Models.Node
+﻿@model Nomad.Models.Client
 
 @{
     int count = 0;
@@ -6,7 +6,8 @@
 
 <div class="row spacer">
     <div class="col-md-4">
-        <h2>Client Properties</h2>
+        <h4>Client Properties</h4>
+
         <ul class="list-group">
             <li class="list-group-item"><strong>ID</strong>: @Model.ID</li>
             <li class="list-group-item"><strong>Name</strong>: @Model.Name</li>
@@ -20,7 +21,8 @@
     </div>
 
     <div class="col-md-4">
-        <h2>Resources</h2>
+        <h4>Resources</h4>
+
         <ul class="list-group">
             <li class="list-group-item"><strong>CPU (MHz)</strong>: @Model.Resources.CPU</li>
             <li class="list-group-item"><strong>Memory (MB)</strong>: @Model.Resources.MemoryMB</li>
@@ -36,10 +38,11 @@
     </div>
 
     <div class="col-md-4">
-        <h2>Attributes</h2>
+        <h4>Attributes</h4>
+
         <ul class="list-group">
             <ul class="list-group">
-                <li class="list-group-item"><strong>Operating System Version</strong>: @Model.Attributes.Where(a => a.Key == "os.name").Select(a => a.Value).FirstOrDefault() @Model.Attributes.Where(a => a.Key == "os.version").Select(a => a.Value).FirstOrDefault()</li>
+                <li class="list-group-item"><strong>OS Version</strong>: @Model.Attributes.Where(a => a.Key == "os.name").Select(a => a.Value).FirstOrDefault() @Model.Attributes.Where(a => a.Key == "os.version").Select(a => a.Value).FirstOrDefault()</li>
                 <li class="list-group-item"><strong>Docker Version</strong>: @Model.Attributes.Where(a => a.Key == "driver.docker.version").Select(a => a.Value).FirstOrDefault()</li>
                 <li class="list-group-item"><strong>Nomad Version</strong>: @Model.Attributes.Where(a => a.Key == "nomad.version").Select(a => a.Value).FirstOrDefault()</li>
                 <li class="list-group-item"><strong>Consul Version</strong>: @Model.Attributes.Where(a => a.Key == "consul.version").Select(a => a.Value).FirstOrDefault()</li>
@@ -74,7 +77,8 @@
         }
         
         <div class="col-md-3">
-            <h2>@cpu.CPU.ToString().ToUpper() Utilisation</h2>
+            <h4>@cpu.CPU.ToString().ToUpper() Utilisation</h4>
+
             <canvas id="cpuChart" height="200"></canvas>
             <script>
                 var ctx = document.getElementById("cpuChart");
@@ -103,7 +107,8 @@
     }
 
     <div class="col-md-3">
-        <h2>Memory Utilisation</h2>
+        <h4>Memory Utilisation</h4>
+
         <canvas id="memChart" height="200"></canvas>
         <script>
             var ctx = document.getElementById("memChart");
@@ -133,7 +138,8 @@
 
 <div class="row spacer">
     <div class="col-md-12">
-        <h2>Allocations</h2>
+        <h4>Allocations</h4>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -164,9 +170,10 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
-        <div id="raw" class="panel-body panel-collapse collapse">
-            <pre><code class="json">@ViewBag.Json</code></pre>
+        <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
+        
+        <div id="json" class="collapse">
+            <pre><code>@ViewBag.Json</code></pre>
         </div>
     </div>
 </div>

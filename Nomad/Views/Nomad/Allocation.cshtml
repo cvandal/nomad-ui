@@ -4,7 +4,8 @@
     <div class="col-md-6">
         <div class="row spacer">
             <div class="col-md-6">
-                <h2>Allocation Properties</h2>
+                <h4>Allocation Properties</h4>
+
                 <ul class="list-group">
                     <li class="list-group-item"><strong>ID</strong>: @Model.ID</li>
                     <li class="list-group-item"><strong>Name</strong>: @Model.Name</li>
@@ -18,7 +19,8 @@
             </div>
 
             <div class="col-md-6">
-                <h2>Resources</h2>
+                <h4>Resources</h4>
+
                 <ul class="list-group">
                     <li class="list-group-item"><strong>CPU (MHz)</strong>: @Model.Resources.CPU</li>
                     <li class="list-group-item"><strong>Memory (MB)</strong>: @Model.Resources.MemoryMB</li>
@@ -39,7 +41,8 @@
 
         <div class="row spacer">
             <div class="col-md-6">
-                <h2>CPU Utilisation</h2>
+                <h4>CPU Utilisation</h4>
+
                 <canvas id="cpuChart" height="200"></canvas>
                 <script>
                     var ctx = document.getElementById("cpuChart");
@@ -67,7 +70,8 @@
             </div>
 
             <div class="col-md-6">
-                <h2>Memory Utilisation</h2>
+                <h4>Memory Utilisation</h4>
+
                 <canvas id="memChart" height="200"></canvas>
                 <script>
                     var ctx = document.getElementById("memChart");
@@ -97,16 +101,17 @@
     </div>
 
     <div class="col-md-6">
-        <h2>Logs</h2>
-        <ul class="nav nav-tabs logs-nav">
+        <h4>Logs</h4>
+
+        <nav class="nav logs-nav">
             @foreach (var log in Model.Logs.OrderBy(l => l.Name))
             {
-                <li class="nav-item"><a class="nav-link log" href="#">@log.Name</a></li>
+                <a class="nav-link log" href="#">@log.Name</a>
             }
-        </ul>
+        </nav>
 
-        <div id="log-wrapper">
-            <pre><code id="log"></code></pre>
+        <div id="log">
+            <pre><code></code></pre>
         </div>
 
         <script>
@@ -114,14 +119,14 @@
                 $('.log').removeClass('active');
                 $(this).addClass('active');
 
-                $('#log').html('<img src="images/loading.gif" alt="Loading..." />');
+                $('#log pre code').html('<img src="images/loading.gif" alt="Loading..." />');
 
                 $.get("/allocation/log?client=@Model.Resources.Networks.FirstOrDefault().IP&id=@Model.ID&log=" + $(this).text(), function (content) {
                     if (content) {
-                        $('#log').html(content);
+                        $('#log pre code').html(content);
                     }
                     else {
-                        $('#log').html("File is empty.");
+                        $('#log pre code').html("¯\\_(ツ)_/¯");
                     }
                 });
             });
@@ -131,7 +136,8 @@
 
 <div class="row spacer">
     <div class="col-md-12">
-        <h2>Task Events</h2>
+        <h4>Task Events</h4>
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -173,9 +179,10 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h2>Raw JSON <a href="#raw" data-toggle="collapse">&darr;</a></h2>
-        <div id="raw" class="panel-body panel-collapse collapse">
-            <pre><code class="json">@ViewBag.Json</code></pre>
+        <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
+        
+        <div id="json" class="collapse">
+            <pre><code>@ViewBag.Json</code></pre>
         </div>
     </div>
 </div>
