@@ -5,7 +5,7 @@
 }
 
 <div class="row spacer">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <h4>Client Properties</h4>
 
         <ul class="list-group">
@@ -20,7 +20,7 @@
         </ul>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <h4>Resources</h4>
 
         <ul class="list-group">
@@ -37,7 +37,7 @@
         </ul>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <h4>Attributes</h4>
 
         <ul class="list-group">
@@ -67,73 +67,99 @@
     </div>
 </div>
 
-<div class="row spacer">
-    @foreach (var cpu in Model.Stats.CPU)
-    {
-        @if (string.IsNullOrEmpty(cpu.CPU))
-        {
-            cpu.CPU = "CPU" + count;
-            count++;
-        }
-        
-        <div class="col-md-3">
-            <h4>@cpu.CPU.ToString().ToUpper() Utilisation</h4>
-
-            <canvas id="cpuChart" height="200"></canvas>
-            <script>
-                var ctx = document.getElementById("cpuChart");
-                var myChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ["Idle %", "Active %"],
-                        datasets: [{
-                            data: [@cpu.Idle, @cpu.Total],
-                            backgroundColor: ['#1fb58f', '#eab126'],
-                            hoverBackgroundColor: ['#1fb58f', '#eab126'],
-                            borderColor: ['#1e1e1e', '#1e1e1e']
-                        }]
-                    },
-                    options: {
-                        cutoutPercentage: 75,
-                        legend: {
-                            labels: {
-                                fontColor: "#dfdfdf"
-                            }
-                        }
-                    }
-                });
-            </script>
-        </div>
-    }
-
-    <div class="col-md-3">
-        <h4>Memory Utilisation</h4>
-
-        <canvas id="memChart" height="200"></canvas>
-        <script>
-            var ctx = document.getElementById("memChart");
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ["Available MB", "Consumed MB"],
-                    datasets: [{
-                        data: [@Model.Stats.Memory.Available, @Model.Stats.Memory.Used],
-                        backgroundColor: ['#1fb58f', '#eab126'],
-                        hoverBackgroundColor: ['#1fb58f', '#eab126'],
-                        borderColor: ['#1e1e1e', '#1e1e1e']
-                    }]
-                },
-                options: {
-                    cutoutPercentage: 75,
-                    legend: {
-                        labels: {
-                            fontColor: "#dfdfdf"
-                        }
-                    }
+<div id="root">
+    <script type="text/jsx">
+        var App = React.createClass({
+            getInitialState: function() {
+                return {
+                    client: null
                 }
-            });
-        </script>
-    </div>
+            },
+            
+            componentDidMount: function() {
+                const makeRequest = () => axios.get("http://@(Model.Resources.Networks.FirstOrDefault().IP):4646/v1/client/stats").then(({ data }) => this.setState({ client: data }));
+                this.serverRequest = makeRequest();
+                this.poll = setInterval(() => {
+                    this.serverRequest = makeRequest();
+                }, 5000) // Poll every 5 seconds
+            },
+
+            componentWillUnmount: function() {
+                this.serverRequest.abort();
+                clearInterval(this.poll)
+            },
+
+            render: function() {
+                const { client } = this.state;
+                if(client === null) {
+                    return null
+                }
+                return (
+                    <div className="row spacer">
+                        @foreach (var cpu in Model.Stats.CPU)
+                        {
+                            @if (string.IsNullOrEmpty(cpu.CPU))
+                            {
+                                cpu.CPU = "CPU" + count;
+                            }
+
+                            <div className="col-md-3">
+                                <h4>@cpu.CPU.ToString().ToUpper() Utilisation</h4>
+                                <reactChartjs2.Doughnut
+                                    data={{
+                                        labels: ["Idle %", "Active %"],
+                                        datasets: [{
+                                            data: [client.CPU[@count].Idle, client.CPU[@count].Total],
+                                            backgroundColor: ['#1fb58f', '#eab126'],
+                                            hoverBackgroundColor: ['#1fb58f', '#eab126'],
+                                            borderColor: ['#1e1e1e', '#1e1e1e']
+                                        }]
+                                    }}
+                                    options={{
+                                        cutoutPercentage: 75,
+                                        legend: {
+                                            labels: {
+                                                fontColor: "#dfdfdf"
+                                            }
+                                        }
+                                    }}
+                                    height={200}
+                                />
+                            </div>
+
+                            count++;
+                        }
+
+                        <div className="col-md-3">
+                            <h4>Memory Utilisation</h4>
+                            <reactChartjs2.Doughnut
+                                data={{
+                                    labels: ["Available MB", "Consumed MB"],
+                                    datasets: [{
+                                        data: [client.Memory.Available, client.Memory.Used],
+                                        backgroundColor: ['#1fb58f', '#eab126'],
+                                        hoverBackgroundColor: ['#1fb58f', '#eab126'],
+                                        borderColor: ['#1e1e1e', '#1e1e1e']
+                                    }]
+                                }}
+                                options={{
+                                    cutoutPercentage: 75,
+                                    legend: {
+                                        labels: {
+                                            fontColor: "#dfdfdf"
+                                        }
+                                    }
+                                }}
+                                height={200}
+                            />
+                        </div>
+                    </div>
+                )
+            }
+        });
+
+        ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
 </div>
 
 <div class="row spacer">
@@ -171,9 +197,9 @@
 <div class="row">
     <div class="col-md-12">
         <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
-        
+
         <div id="json" class="collapse">
-            <pre><code>@ViewBag.Json</code></pre>
+            <pre><code>@ViewData["Json"]</code></pre>
         </div>
     </div>
 </div>

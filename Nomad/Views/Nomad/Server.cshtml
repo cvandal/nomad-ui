@@ -8,7 +8,7 @@
             <li class="list-group-item"><strong>Name</strong>: @Model.Member.Name</li>
             <li class="list-group-item"><strong>Address</strong>: @Model.Member.Addr</li>
             <li class="list-group-item"><strong>Port</strong>: @Model.Member.Port</li>
-            @foreach (var server in Model.Operator.Servers)
+            @foreach (var server in Model.Member.Operator.Servers)
             {
                 @if (server.Node == Model.Member.Name)
                 {
@@ -40,9 +40,9 @@
 <div class="row">
     <div class="col-md-12">
         <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
-        
+
         <div id="json" class="collapse">
-            <pre><code>@ViewBag.Json</code></pre>
+            <pre><code>@ViewData["Json"]</code></pre>
         </div>
     </div>
 </div>
