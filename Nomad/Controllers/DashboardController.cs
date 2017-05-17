@@ -21,7 +21,7 @@ namespace Nomad.Controllers
                 Jobs = await jobsTask,
                 Allocations = await allocationsTask,
                 Clients = await clientsTask,
-                Server = await serverTask,
+                Servers = await serverTask,
                 Events = new AllocationController().GetAllocationEvents(await allocationsTask)
             };
 
