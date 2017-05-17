@@ -74,7 +74,7 @@ namespace Nomad.Models
         public int ExitCode { get; set; }
         public int Signal { get; set; }
         public string Message { get; set; }
-        public int KillTimeout { get; set; }
+        public long KillTimeout { get; set; }
         public string KillError { get; set; }
         public string KillReason { get; set; }
         public int StartDelay { get; set; }
