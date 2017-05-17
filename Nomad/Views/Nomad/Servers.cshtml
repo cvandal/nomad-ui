@@ -1,4 +1,9 @@
-﻿@model Nomad.Models.Server
+﻿@model Nomad.Extensions.PaginatedList<Nomad.Models.Member>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
 
 <div class="row">
     <div class="col-md-12">
@@ -16,14 +21,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var member in Model.Members.OrderBy(m => m.Name))
+                @foreach (var member in Model)
                 {
                     <tr>
                         <td><a href="/server?ip=@member.Addr">@member.Name</a></td>
                         <td>@member.Addr</td>
                         <td>@member.Port</td>
                         <td>@member.Status</td>
-                        @foreach (var server in Model.Operator.Servers)
+                        @foreach (var server in member.Operator.Servers)
                         {
                             @if (server.Node == member.Name)
                             {
@@ -35,5 +40,12 @@
                 }
             </tbody>
         </table>
+
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @prevDisabled"><a class="page-link" href="/servers?page=@(Model.PageIndex - 1)">Previous</a></li>
+                <li class="page-item @nextDisabled"><a class="page-link" href="/servers?page=@(Model.PageIndex + 1)">Next</a></li>
+            </ul>
+        </nav>
     </div>
 </div>

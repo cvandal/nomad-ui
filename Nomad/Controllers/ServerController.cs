@@ -1,26 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nomad.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nomad.Extensions;
 
 namespace Nomad.Controllers
 {
     public class ServerController : Controller
     {
         private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static HttpClient HttpClient = new HttpClient();
 
         [Route("/servers")]
-        public async Task<IActionResult> Servers()
+        public async Task<IActionResult> Servers(int? page)
         {
             var serverOperatorTask = GetServerOperatorsAsync();
 
             var servers = await GetServersAsync();
-            servers.Operator = await serverOperatorTask;
+            foreach (var server in servers)
+            {
+                server.Operator = await serverOperatorTask;
+            }
 
-            return View("~/Views/Nomad/Servers.cshtml", servers);
+            return View("~/Views/Nomad/Servers.cshtml", PaginatedList<Member>.CreateAsync(servers, page ?? 1, 15));
         }
 
         [Route("/server")]
@@ -29,58 +36,43 @@ namespace Nomad.Controllers
             var serverOperatorTask = GetServerOperatorsAsync();
             
             var server = await GetServerAsync(ip);
-            server.Operator = await serverOperatorTask;
+            server.Member.Operator = await serverOperatorTask;
 
             return View("~/Views/Nomad/Server.cshtml", server);
         }
 
-        public async Task<Server> GetServersAsync()
+        public async Task<List<Member>> GetServersAsync()
         {
             Server server;
+            List<Member> members = new List<Member>();
 
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/agent/members"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/agent/members").Result.Content.ReadAsStringAsync();
 
-                server = JsonConvert.DeserializeObject<Server>(result);
-            }
+            server = JsonConvert.DeserializeObject<Server>(result);
 
             foreach (var member in server.Members)
             {
                 if (member.Status == "alive") { member.Up++; }
                 if (member.Status == "dead") { member.Down++; }
+
+                members.Add(member);
             }
 
-            return server;
+            return members.OrderBy(m => m.Name).ToList();
         }
 
         public async Task<Server> GetServerAsync(string ip)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync("http://" + ip + ":4646/v1/agent/self"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync("http://" + ip + ":4646/v1/agent/self").Result.Content.ReadAsStringAsync();
+            ViewData["Json"] = JToken.Parse(result).ToString(Formatting.Indented);
 
-                ViewBag.Json = JToken.Parse(result).ToString(Formatting.Indented);
-
-                return JsonConvert.DeserializeObject<Server>(result);
-            }
+            return JsonConvert.DeserializeObject<Server>(result);
         }
 
         public async Task<Operator> GetServerOperatorsAsync()
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/operator/raft/configuration"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<Operator>(result);
-            }
-
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/operator/raft/configuration").Result.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Operator>(result);
         }
     }
 }

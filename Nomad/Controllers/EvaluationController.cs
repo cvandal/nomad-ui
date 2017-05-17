@@ -7,19 +7,21 @@ using Nomad.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nomad.Extensions;
 
 namespace Nomad.Controllers
 {
     public class EvaluationController : Controller
     {
         private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static HttpClient HttpClient = new HttpClient();
 
         [Route("/evaluations")]
-        public async Task<IActionResult> Evaluations()
+        public async Task<IActionResult> Evaluations(int? page)
         {
             var evaluations = await GetEvaluationsAsync();
 
-            return View("~/Views/Nomad/Evaluations.cshtml", evaluations);
+            return View("~/Views/Nomad/Evaluations.cshtml", PaginatedList<Evaluation>.CreateAsync(evaluations, page ?? 1, 15));
         }
 
         [Route("/evaluation")]
@@ -33,42 +35,24 @@ namespace Nomad.Controllers
 
         public async Task<List<Evaluation>> GetEvaluationsAsync()
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/evaluations"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/evaluations").Result.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<List<Evaluation>>(result).OrderBy(e => e.JobID).ToList();
-            }
+            return JsonConvert.DeserializeObject<List<Evaluation>>(result).OrderBy(e => e.JobID).ToList();
         }
 
         public async Task<Evaluation> GetEvaluationAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/evaluation/" + id))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/evaluation/" + id).Result.Content.ReadAsStringAsync();
+            ViewData["Json"] = JToken.Parse(result).ToString(Formatting.Indented);
 
-                ViewBag.Json = JToken.Parse(result).ToString(Formatting.Indented);
-
-                return JsonConvert.DeserializeObject<Evaluation>(result);
-            }
+            return JsonConvert.DeserializeObject<Evaluation>(result);
         }
 
         public async Task<List<Allocation>> GetEvaluationAllocationsAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/evaluation/" + id + "/allocations"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/evaluation/" + id + "/allocations").Result.Content.ReadAsStringAsync();
 
-                var allocations = JsonConvert.DeserializeObject<List<Allocation>>(result);
-
-                return allocations.OrderBy(a => a.Name).ToList();
-            }
+            return JsonConvert.DeserializeObject<List<Allocation>>(result).OrderBy(a => a.Name).ToList();
         }
     }
 }

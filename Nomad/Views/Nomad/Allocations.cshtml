@@ -1,4 +1,9 @@
-﻿@model IEnumerable<Nomad.Models.Allocation>
+﻿@model Nomad.Extensions.PaginatedList<Nomad.Models.Allocation>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
 
 <div class="row">
     <div class="col-md-12">
@@ -29,5 +34,12 @@
                 }
             </tbody>
         </table>
+
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @prevDisabled"><a class="page-link" href="/allocations?page=@(Model.PageIndex - 1)">Previous</a></li>
+                <li class="page-item @nextDisabled"><a class="page-link" href="/allocations?page=@(Model.PageIndex + 1)">Next</a></li>
+            </ul>
+        </nav>
     </div>
 </div>

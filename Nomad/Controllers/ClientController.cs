@@ -7,19 +7,21 @@ using Nomad.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Nomad.Extensions;
 
 namespace Nomad.Controllers
 {
     public class ClientController : Controller
     {
         private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static HttpClient HttpClient = new HttpClient();
 
         [Route("/clients")]
-        public async Task<IActionResult> Clients()
+        public async Task<IActionResult> Clients(int? page)
         {
             var clients = await GetClientsAsync();
 
-            return View("~/Views/Nomad/Clients.cshtml", clients);
+            return View("~/Views/Nomad/Clients.cshtml", PaginatedList<Client>.CreateAsync(clients, page ?? 1, 15));
         }
 
         [Route("/client")]
@@ -34,16 +36,11 @@ namespace Nomad.Controllers
 
         public async Task<List<Client>> GetClientsAsync()
         {
-            var clients = new List<Client>();
+            List<Client> clients;
 
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/nodes"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/nodes").Result.Content.ReadAsStringAsync();
 
-                clients = JsonConvert.DeserializeObject<List<Client>>(result);
-            }
+            clients = JsonConvert.DeserializeObject<List<Client>>(result);
 
             foreach (var client in clients)
             {
@@ -51,45 +48,29 @@ namespace Nomad.Controllers
                 if (client.Status == "down") { client.Down++; }
             }
 
-            return clients.OrderBy(n => n.Name).ToList();
+            return clients.OrderBy(c => c.Name).ToList();
         }
 
         public async Task<Client> GetClientAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/node/" + id))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/node/" + id).Result.Content.ReadAsStringAsync();
+            ViewData["Json"] = JToken.Parse(result).ToString(Formatting.Indented);
 
-                ViewBag.Json = JToken.Parse(result).ToString(Formatting.Indented);
-
-                return JsonConvert.DeserializeObject<Client>(result);
-            }
+            return JsonConvert.DeserializeObject<Client>(result);
         }
 
         public async Task<Stats> GetClientStatsAsync(string ip)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync("http://" + ip + ":4646/v1/client/stats"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync("http://" + ip + ":4646/v1/client/stats").Result.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<Stats>(result);
-            }
+            return JsonConvert.DeserializeObject<Stats>(result);
         }
 
         public async Task<List<Allocation>> GetClientAllocationsAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/node/" + id + "/allocations"))
-            using (HttpContent content = response.Content)
-            {
-                string result = await content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync(NomadUrl + "/v1/node/" + id + "/allocations").Result.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<List<Allocation>>(result);
-            }
+            return JsonConvert.DeserializeObject<List<Allocation>>(result);
         }
     }
 }
