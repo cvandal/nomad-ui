@@ -41,7 +41,8 @@ namespace Nomad
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/error");
+                app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
 
             app.UseStaticFiles();
@@ -50,7 +51,7 @@ namespace Nomad
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dashboard}/{action=Index}/{id?}");
+                    template: "{controller=Dashboard}/{action=Index}");
             });
         }
     }
