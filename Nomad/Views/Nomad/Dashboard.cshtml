@@ -127,7 +127,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var @event in Model.Events.Take(10))
+                @foreach (var @event in Model.Events.Take(15))
                 {
                     <tr>
                         <td><a href="/allocation?id=@(@event.AllocationId)">@(@event.AllocationName)</a></td>
