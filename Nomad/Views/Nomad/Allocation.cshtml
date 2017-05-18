@@ -39,65 +39,96 @@
             </div>
         </div>
 
-        <div class="row spacer">
-            <div class="col-md-6">
-                <h4>CPU Utilisation</h4>
+        <div id="root"></div>
+        <script type="text/jsx">
+            var App = React.createClass({
+                getInitialState: function() {
+                    return {
+                        client: null
+                    }
+                },
+                
+                componentDidMount: function() {
+                    const makeRequest = () => axios.get("http://@(Model.Resources.Networks.FirstOrDefault().IP):4646/v1/client/allocation/@Model.ID/stats").then(({ data }) => this.setState({ client: data }));
+                    this.serverRequest = makeRequest();
+                    this.poll = setInterval(() => {
+                        this.serverRequest = makeRequest();
+                    }, 5000) // Poll every 5 seconds
+                },
+                
+                componentWillUnmount: function() {
+                    this.serverRequest.abort();
+                    clearInterval(this.poll)
+                },
+                
+                render: function() {
+                    const { client } = this.state;
+                    
+                    if(client === null) {
+                        return null
+                    }
+                    
+                    var idleCpu = (100 - client.ResourceUsage.CpuStats.Percent);
+                    var activeCpu = client.ResourceUsage.CpuStats.Percent;
+                    var availableMem = (@Model.Resources.MemoryMB - (client.ResourceUsage.MemoryStats.MaxUsage / 1024) / 1024);
+                    var consumedMem = ((client.ResourceUsage.MemoryStats.MaxUsage / 1024) / 1024);
+                    
+                    return (
+                        <div className="row spacer">
+                            <div className="col-md-6">
+                                <h4>CPU Utilisation</h4>
+                                <reactChartjs2.Doughnut
+                                    data={{
+                                        labels: ["Idle %", "Active %" ],
+                                        datasets: [{
+                                            data: [idleCpu, activeCpu],
+                                            backgroundColor: ['#1fb58f', '#eab126' ],
+                                            hoverBackgroundColor: ['#1fb58f', '#eab126' ],
+                                            borderColor: ['#1e1e1e', '#1e1e1e' ]
+                                        }]
+                                    }}
+                                    options={{
+                                        cutoutPercentage: 75,
+                                        legend: {
+                                            labels: {
+                                                fontColor: "#dfdfdf"
+                                            }
+                                        }
+                                    }}
+                                    height={200}
+                                />
+                            </div>
 
-                <canvas id="cpuChart" height="200"></canvas>
-                <script>
-                    var ctx = document.getElementById("cpuChart");
-                    var myChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ["Idle %", "Active %"],
-                            datasets: [{
-                                data: [@(100 - Model.Stats.ResourceUsage.CpuStats.Percent), @Model.Stats.ResourceUsage.CpuStats.Percent],
-                                backgroundColor: ['#1fb58f', '#eab126'],
-                                hoverBackgroundColor: ['#1fb58f', '#eab126'],
-                                borderColor: ['#1e1e1e', '#1e1e1e']
-                            }]
-                        },
-                        options: {
-                            cutoutPercentage: 75,
-                            legend: {
-                                labels: {
-                                    fontColor: "#dfdfdf"
-                                }
-                            }
-                        }
-                    });
-                </script>
-            </div>
+                            <div className="col-md-6">
+                                <h4>Memory Utilisation</h4>
+                                    <reactChartjs2.Doughnut
+                                    data={{
+                                        labels: ["Available MB", "Consumed MB"],
+                                        datasets: [{
+                                            data: [availableMem, consumedMem],
+                                            backgroundColor: ['#1fb58f', '#eab126'],
+                                            hoverBackgroundColor: ['#1fb58f', '#eab126'],
+                                            borderColor: ['#1e1e1e', '#1e1e1e']
+                                        }]
+}}
+                                    options={{
+                                        cutoutPercentage: 75,
+                                        legend: {
+                                            labels: {
+                                                fontColor: "#dfdfdf"
+                                            }
+                                        }
+                                    }}
+                                    height={200}
+                                />
+                            </div>
+                        </div>
+                    )
+                }
+            });
 
-            <div class="col-md-6">
-                <h4>Memory Utilisation</h4>
-
-                <canvas id="memChart" height="200"></canvas>
-                <script>
-                    var ctx = document.getElementById("memChart");
-                    var myChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ["Available MB", "Consumed MB"],
-                            datasets: [{
-                                data: [@(Model.Resources.MemoryMB - ((Model.Stats.ResourceUsage.MemoryStats.MaxUsage / 1024f) / 1024f)), @((Model.Stats.ResourceUsage.MemoryStats.MaxUsage / 1024f) / 1024f)],
-                                backgroundColor: ['#1fb58f', '#eab126'],
-                                hoverBackgroundColor: ['#1fb58f', '#eab126'],
-                                borderColor: ['#1e1e1e', '#1e1e1e']
-                            }]
-                        },
-                        options: {
-                            cutoutPercentage: 75,
-                            legend: {
-                                labels: {
-                                    fontColor: "#dfdfdf"
-                                }
-                            }
-                        }
-                    });
-                </script>
-            </div>
-        </div>
+            ReactDOM.render(<App />, document.getElementById("root"));
+        </script>
     </div>
 
     <div class="col-md-6">
