@@ -14,20 +14,20 @@ namespace Nomad.Models
     {
         public string Name { get; set; }
         public string Addr { get; set; }
-        public int Port { get; set; }
+        public long Port { get; set; }
         public Dictionary<string, dynamic> Tags { get; set; }
         public string Status { get; set; }
-        public int ProtocolMin { get; set; }
-        public int ProtocolMax { get; set; }
-        public int ProtocolCur { get; set; }
-        public int DelegateMin { get; set; }
-        public int DelegateMax { get; set; }
-        public int DelegateCur { get; set; }
+        public long ProtocolMin { get; set; }
+        public long ProtocolMax { get; set; }
+        public long ProtocolCur { get; set; }
+        public long DelegateMin { get; set; }
+        public long DelegateMax { get; set; }
+        public long DelegateCur { get; set; }
         public Operator Operator { get; set; }
 
         // Custom Properties
-        public int Up { get; set; }
-        public int Down { get; set; }
+        public long Up { get; set; }
+        public long Down { get; set; }
     }
 
     public class AdvertiseAddrs

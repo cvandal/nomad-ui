@@ -12,27 +12,27 @@ namespace Nomad.Models
         public List<Member> Servers { get; set; }
 
         // Jobs
-        public int PendingJobs =>Jobs.Sum(j => j.Pending);
+        public long PendingJobs =>Jobs.Sum(j => j.Pending);
 
-        public int RunningJobs => Jobs.Sum(j => j.Running);
+        public long RunningJobs => Jobs.Sum(j => j.Running);
 
-        public int DeadJobs => Jobs.Sum(j => j.Dead);
+        public long DeadJobs => Jobs.Sum(j => j.Dead);
 
         // Allocations
-        public int PendingAllocations => Allocations.Sum(a => a.Pending);
+        public long PendingAllocations => Allocations.Sum(a => a.Pending);
 
-        public int RunningAllocations => Allocations.Sum(a => a.Running);
+        public long RunningAllocations => Allocations.Sum(a => a.Running);
 
-        public int DeadAllocations => Allocations.Sum(a => a.Dead);
+        public long DeadAllocations => Allocations.Sum(a => a.Dead);
 
         // Clients
-        public int UpClients => Clients.Sum(c => c.Up);
+        public long UpClients => Clients.Sum(c => c.Up);
 
-        public int DownClients => Clients.Sum(c => c.Down);
+        public long DownClients => Clients.Sum(c => c.Down);
 
         // Servers
-        public int UpMembers => Servers.Sum(s => s.Up);
+        public long UpMembers => Servers.Sum(s => s.Up);
 
-        public int DownMembers => Servers.Sum(s => s.Down);
+        public long DownMembers => Servers.Sum(s => s.Down);
     }
 }

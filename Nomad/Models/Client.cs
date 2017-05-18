@@ -20,25 +20,25 @@ namespace Nomad.Models
         public bool Drain { get; set; }
         public string Status { get; set; }
         public string StatusDescription { get; set; }
-        public int StatusUpdatedAt { get; set; }
-        public int CreateIndex { get; set; }
-        public int ModifyIndex { get; set; }
+        public long StatusUpdatedAt { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
         public Stats Stats { get; set; }
         public ResourceUsage ResourceUsage { get; set; }
         public long Timestamp { get; set; }
         public List<Allocation> Allocations { get; set; }
 
         // Custom Properties
-        public int Up { get; set; }
-        public int Down { get; set; }
+        public long Up { get; set; }
+        public long Down { get; set; }
     }
 
     public class Reserved
     {
-        public int CPU { get; set; }
-        public int MemoryMB { get; set; }
-        public int DiskMB { get; set; }
-        public int IOPS { get; set; }
+        public long CPU { get; set; }
+        public long MemoryMB { get; set; }
+        public long DiskMB { get; set; }
+        public long IOPS { get; set; }
         public List<Network> Networks { get; set; }
     }
 
@@ -50,7 +50,7 @@ namespace Nomad.Models
         public List<DiskStat> DiskStats { get; set; }
         public Memory Memory { get; set; }
         public long Timestamp { get; set; }
-        public int Uptime { get; set; }
+        public long Uptime { get; set; }
         public ResourceUsage ResourceUsage { get; set; }
         public Dictionary<string, dynamic> Nomad { get; set; }
         public Dictionary<string, dynamic> Raft { get; set; }
@@ -63,7 +63,7 @@ namespace Nomad.Models
         public long Available { get; set; }
         public string Device { get; set; }
         public double InodesUsedPercent { get; set; }
-        public string Mountpoint { get; set; }
+        public string Mountpolong { get; set; }
         public long Size { get; set; }
         public long Used { get; set; }
         public double UsedPercent { get; set; }
@@ -83,7 +83,7 @@ namespace Nomad.Models
         public long Available { get; set; }
         public string Device { get; set; }
         public double InodesUsedPercent { get; set; }
-        public string Mountpoint { get; set; }
+        public string Mountpolong { get; set; }
         public long Size { get; set; }
         public long Used { get; set; }
         public double UsedPercent { get; set; }
@@ -116,12 +116,12 @@ namespace Nomad.Models
 
     public class MemoryStats
     {
-        public int Cache { get; set; }
-        public int KernelMaxUsage { get; set; }
-        public int KernelUsage { get; set; }
-        public int MaxUsage { get; set; }
+        public long Cache { get; set; }
+        public long KernelMaxUsage { get; set; }
+        public long KernelUsage { get; set; }
+        public long MaxUsage { get; set; }
         public List<string> Measured { get; set; }
-        public int RSS { get; set; }
-        public int Swap { get; set; }
+        public long RSS { get; set; }
+        public long Swap { get; set; }
     }
 }

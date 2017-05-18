@@ -9,7 +9,7 @@ namespace Nomad.Models
         public string ParentID { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
-        public int Priority { get; set; }
+        public long Priority { get; set; }
         public bool AllAtOnce { get; set; }
         public List<string> Datacenters { get; set; }
         public object[] Constraints { get; set; }
@@ -23,22 +23,22 @@ namespace Nomad.Models
         public string Status { get; set; }
         public string StatusDescription { get; set; }
         public JobSummary JobSummary { get; set; }
-        public int CreateIndex { get; set; }
-        public int ModifyIndex { get; set; }
-        public int JobModifyIndex { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
+        public long JobModifyIndex { get; set; }
         public List<Evaluation> Evaluations { get; set; }
         public List<Allocation> Allocations { get; set; }
 
         // Custom Properties
-        public int Dead { get; set; }
-        public int Pending { get; set; }
-        public int Running { get; set; }
+        public long Dead { get; set; }
+        public long Pending { get; set; }
+        public long Running { get; set; }
     }
 
     public class TaskGroup
     {
         public string Name { get; set; }
-        public int Count { get; set; }
+        public long Count { get; set; }
         public object[] Constraints { get; set; }
         public RestartPolicy RestartPolicy { get; set; }
         public List<Task> Tasks { get; set; }
@@ -48,8 +48,8 @@ namespace Nomad.Models
 
     public class RestartPolicy
     {
-        public int Attempts { get; set; }
-        public long Interval { get; set; }
+        public long Attempts { get; set; }
+        public long longerval { get; set; }
         public long Delay { get; set; }
         public string Mode { get; set; }
     }
@@ -64,7 +64,7 @@ namespace Nomad.Models
         public List<Service> Services { get; set; }
         public object Vault { get; set; }
         public List<object> Templates { get; set; }
-        public object Constraints { get; set; }
+        public object Constralongs { get; set; }
         public Resources Resources { get; set; }
         public object DispatchPayload { get; set; }
         public object Meta { get; set; }
@@ -107,17 +107,17 @@ namespace Nomad.Models
         public string Path { get; set; }
         public string Protocol { get; set; }
         public string PortLabel { get; set; }
-        public long Interval { get; set; }
+        public long longerval { get; set; }
         public long Timeout { get; set; }
         public string InitialStatus { get; set; }
     }
 
     public class Resources
     {
-        public int CPU { get; set; }
-        public int MemoryMB { get; set; }
-        public int DiskMB { get; set; }
-        public int IOPS { get; set; }
+        public long CPU { get; set; }
+        public long MemoryMB { get; set; }
+        public long DiskMB { get; set; }
+        public long IOPS { get; set; }
         public List<Network> Networks { get; set; }
     }
 
@@ -126,7 +126,7 @@ namespace Nomad.Models
         public string Device { get; set; }
         public string CIDR { get; set; }
         public string IP { get; set; }
-        public int MBits { get; set; }
+        public long MBits { get; set; }
         public object ReservedPorts { get; set; }
         public List<DynamicPort> DynamicPorts { get; set; }
     }
@@ -134,26 +134,26 @@ namespace Nomad.Models
     public class DynamicPort
     {
         public string Label { get; set; }
-        public int Value { get; set; }
+        public long Value { get; set; }
     }
 
     public class LogConfig
     {
-        public int MaxFiles { get; set; }
-        public int MaxFileSizeMB { get; set; }
+        public long MaxFiles { get; set; }
+        public long MaxFileSizeMB { get; set; }
     }
 
     public class EphemeralDisk
     {
         public bool Sticky { get; set; }
-        public int SizeMB { get; set; }
+        public long SizeMB { get; set; }
         public bool Migrate { get; set; }
     }
 
     public class Update
     {
         public long Stagger { get; set; }
-        public int MaxParallel { get; set; }
+        public long MaxParallel { get; set; }
     }
 
     public class JobSummary
@@ -161,8 +161,8 @@ namespace Nomad.Models
         public string JobID { get; set; }
         public Summary Summary { get; set; }
         public object Children { get; set; }
-        public int CreateIndex { get; set; }
-        public int ModifyIndex { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
     }
 
     public class Summary
@@ -172,11 +172,11 @@ namespace Nomad.Models
 
     public class TaskGroupStatus
     {
-        public int Queued { get; set; }
-        public int Complete { get; set; }
-        public int Failed { get; set; }
-        public int Running { get; set; }
-        public int Starting { get; set; }
-        public int Lost { get; set; }
+        public long Queued { get; set; }
+        public long Complete { get; set; }
+        public long Failed { get; set; }
+        public long Running { get; set; }
+        public long Starting { get; set; }
+        public long Lost { get; set; }
     }
 }

@@ -25,27 +25,27 @@ namespace Nomad.Models
         public string ClientDescription { get; set; }
         public Dictionary<string, TaskName> TaskStates { get; set; }
         public string PreviousAllocation { get; set; }
-        public int CreateIndex { get; set; }
-        public int ModifyIndex { get; set; }
-        public int AllocModifyIndex { get; set; }
+        public long CreateIndex { get; set; }
+        public long ModifyIndex { get; set; }
+        public long AllocModifyIndex { get; set; }
         public long CreateTime { get; set; }
         public Stats Stats { get; set; }
         public List<Log> Logs { get; set; }
 
         // Custom Properties
-        public int Pending { get; set; }
-        public int Running { get; set; }
-        public int Dead { get; set; }
+        public long Pending { get; set; }
+        public long Running { get; set; }
+        public long Dead { get; set; }
 
         public DateTime CreateDateTime => CreateTime.FromUnixTime();
     }
 
     public class SharedResources
     {
-        public int CPU { get; set; }
-        public int MemoryMB { get; set; }
-        public int DiskMB { get; set; }
-        public int IOPS { get; set; }
+        public long CPU { get; set; }
+        public long MemoryMB { get; set; }
+        public long DiskMB { get; set; }
+        public long IOPS { get; set; }
         public object Networks { get; set; }
     }
 
@@ -56,10 +56,10 @@ namespace Nomad.Models
         public string StartedAt { get; set; }
         public string FinishedAt { get; set; }
         public List<Event> Events { get; set; }
-        public int CPU { get; set; }
-        public int MemoryMB { get; set; }
-        public int DiskMB { get; set; }
-        public int IOPS { get; set; }
+        public long CPU { get; set; }
+        public long MemoryMB { get; set; }
+        public long DiskMB { get; set; }
+        public long IOPS { get; set; }
         public List<Network> Networks { get; set; }
     }
 
@@ -71,16 +71,16 @@ namespace Nomad.Models
         public string RestartReason { get; set; }
         public string SetupError { get; set; }
         public string DriverError { get; set; }
-        public int ExitCode { get; set; }
-        public int Signal { get; set; }
+        public long ExitCode { get; set; }
+        public long Signal { get; set; }
         public string Message { get; set; }
         public long KillTimeout { get; set; }
         public string KillError { get; set; }
         public string KillReason { get; set; }
-        public int StartDelay { get; set; }
+        public long StartDelay { get; set; }
         public string DownloadError { get; set; }
         public string ValidationError { get; set; }
-        public int DiskLimit { get; set; }
+        public long DiskLimit { get; set; }
         public string FailedSibling { get; set; }
         public string VaultError { get; set; }
         public string TaskSignalReason { get; set; }
@@ -96,17 +96,17 @@ namespace Nomad.Models
 
     public class Metrics
     {
-        public int NodesEvaluated { get; set; }
-        public int NodesFiltered { get; set; }
+        public long NodesEvaluated { get; set; }
+        public long NodesFiltered { get; set; }
         public Dictionary<string, dynamic> NodesAvailable { get; set; }
         public object ClassFiltered { get; set; }
-        public object ConstraintFiltered { get; set; }
-        public int NodesExhausted { get; set; }
+        public object ConstralongFiltered { get; set; }
+        public long NodesExhausted { get; set; }
         public object ClassExhausted { get; set; }
         public object DimensionExhausted { get; set; }
         public Dictionary<string, dynamic> Scores { get; set; }
-        public int AllocationTime { get; set; }
-        public int CoalescedFailures { get; set; }
+        public long AllocationTime { get; set; }
+        public long CoalescedFailures { get; set; }
     }
 
     public class Log
@@ -115,6 +115,6 @@ namespace Nomad.Models
         public bool IsDir { get; set; }
         public string ModTime { get; set; }
         public string Name { get; set; }
-        public int Size { get; set; }
+        public long Size { get; set; }
     }
 }
