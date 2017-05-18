@@ -1,4 +1,5 @@
 ﻿<div id="dashboard"></div>
+
 <script type="text/jsx">
     var App = React.createClass({
         getInitialState: function() {
@@ -9,10 +10,12 @@
         
         componentDidMount: function() {
             const makeRequest = () => axios.get("/api/dashboard").then(({ data }) => this.setState({ dashboard: data }));
+            
             this.serverRequest = makeRequest();
+            
             this.poll = setInterval(() => {
                 this.serverRequest = makeRequest();
-            }, 5000) // Poll every 5 seconds
+            }, 3000) // Poll every 3 seconds
         },
         
         componentWillUnmount: function() {
@@ -23,7 +26,7 @@
         render: function() {
             const {dashboard} = this.state;
             
-            if(dashboard === null) {
+            if (dashboard === null) {
                 return null
             }
             
@@ -150,10 +153,12 @@
                                             
                                             return i;
                                         }
+
+                                        var ampm = d.getHours() >= 12 ? "PM" : "AM";
                                         
                                         return (
                                             <tr>
-                                                <td>{event.allocationName}</td>
+                                                <td><a href={"/allocation?id=" + event.allocationId}>{event.allocationName}</a></td>
                                                 <td>{event.type}</td>
                                                 <td>
                                                     {event.downloadError}
@@ -168,7 +173,7 @@
                                                     {event.validationError}
                                                     {event.vaultError}
                                                 </td>
-                                                <td>{d.getDate()}/{addZero((d.getMonth() + 1))}/{d.getFullYear()} {addZero(d.getHours())}:{addZero(d.getMinutes())}:{addZero(d.getSeconds())}</td>
+                                                <td>{d.getDate()}/{addZero((d.getMonth() + 1))}/{d.getFullYear()} {addZero(d.getHours())}:{addZero(d.getMinutes())}:{addZero(d.getSeconds())} {ampm}</td>
                                             </tr>
                                         )
                                     })}
@@ -183,3 +188,13 @@
 
     ReactDOM.render(<App />, document.getElementById("dashboard"));
 </script>
+
+<!-- React -->
+<script src="~/js/react-15.5.4.min.js"></script>
+<script src="~/js/react-dom-15.5.4.min.js"></script>
+<script src="~/js/axios-0.16.1.min.js"></script>
+<script src="~/js/babel.min.js"></script> <!-- 6.24.0 -->
+
+<!-- Chart.js -->
+<script src="~/js/chartjs-2.5.0.min.js"></script>
+<script src="~/js/react-chartjs-2.1.0.min.js"></script>

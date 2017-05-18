@@ -40,6 +40,7 @@
         </div>
 
         <div id="charts"></div>
+
         <script type="text/jsx">
             var App = React.createClass({
                 getInitialState: function() {
@@ -50,10 +51,12 @@
                 
                 componentDidMount: function() {
                     const makeRequest = () => axios.get("http://@(Model.Resources.Networks.FirstOrDefault().IP):4646/v1/client/allocation/@Model.ID/stats").then(({ data }) => this.setState({ client: data }));
+                    
                     this.serverRequest = makeRequest();
+                    
                     this.poll = setInterval(() => {
                         this.serverRequest = makeRequest();
-                    }, 5000) // Poll every 5 seconds
+                    }, 3000) // Poll every 3 seconds
                 },
                 
                 componentWillUnmount: function() {
@@ -64,7 +67,7 @@
                 render: function() {
                     const { client } = this.state;
                     
-                    if(client === null) {
+                    if (client === null) {
                         return null
                     }
                     
@@ -217,3 +220,19 @@
         </div>
     </div>
 </div>
+
+<!-- React -->
+<script src="~/js/react-15.5.4.min.js"></script>
+<script src="~/js/react-dom-15.5.4.min.js"></script>
+<script src="~/js/axios-0.16.1.min.js"></script>
+<script src="~/js/babel.min.js"></script> <!-- 6.24.0 -->
+
+<!-- Chart.js -->
+<script src="~/js/chartjs-2.5.0.min.js"></script>
+<script src="~/js/react-chartjs-2.1.0.min.js"></script>
+
+<!-- Highlight.js -->
+<script src="~/js/highlightjs-9.11.0.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
