@@ -1,6 +1,6 @@
 # Nomad UI
 
-Something something something Hashicorp doesn't provide a UI for Nomad something.
+Something something something Hashicorp doesn't provide a free UI for Nomad something.
 
 ### Prerequisites
 Enable CORS on the HTTP API endpoint by adding the following to your Nomad agent configuration:
