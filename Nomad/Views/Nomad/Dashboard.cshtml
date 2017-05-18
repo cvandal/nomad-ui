@@ -1,154 +1,185 @@
-﻿@model Nomad.Models.Dashboard
+﻿<div id="dashboard"></div>
+<script type="text/jsx">
+    var App = React.createClass({
+        getInitialState: function() {
+            return {
+                dashboard: null
+            }
+        },
+        
+        componentDidMount: function() {
+            const makeRequest = () => axios.get("/api/dashboard").then(({ data }) => this.setState({ dashboard: data }));
+            this.serverRequest = makeRequest();
+            this.poll = setInterval(() => {
+                this.serverRequest = makeRequest();
+            }, 5000) // Poll every 5 seconds
+        },
+        
+        componentWillUnmount: function() {
+            this.serverRequest.abort();
+            clearInterval(this.poll)
+        },
+        
+        render: function() {
+            const {dashboard} = this.state;
+            
+            if(dashboard === null) {
+                return null
+            }
+            
+            return (
+                <div>
+                    <div className="row spacer">
+                        <div className="col-md-3">
+                            <h4>Job States</h4>
+                            <reactChartjs2.Doughnut
+                                data={{
+                                    labels: ["Pending", "Running", "Dead"],
+                                    datasets: [{
+                                        data: [dashboard.pendingJobs, dashboard.runningJobs, dashboard.deadJobs],
+                                        backgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                                        hoverBackgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                                        borderColor: ['#1e1e1e', '#1e1e1e', '#1e1e1e']
+                                    }]
+                                }}
+                                options={{
+                                    cutoutPercentage: 75,
+                                    legend: {
+                                        labels: {
+                                            fontColor: "#dfdfdf"
+                                        }
+                                    }
+                                }}
+                                height={200}
+                            />
+                        </div>
 
-<div class="row spacer">
-    <div class="col-md-3">
-        <h4>Job States</h4>
-        <canvas id="jobsChart" height="200"></canvas>
-        <script>
-            var ctx = document.getElementById("jobsChart");
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ["Pending", "Running", "Dead"],
-                    datasets: [{
-                        data: [@Model.PendingJobs, @Model.RunningJobs, @Model.DeadJobs],
-                        backgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
-                        hoverBackgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
-                        borderColor: ['#1e1e1e', '#1e1e1e', '#1e1e1e']
-                    }]
-                },
-                options: {
-                    cutoutPercentage: 75,
-                    legend: {
-                        labels: {
-                            fontColor: "#dfdfdf"
-                        }
-                    }
-                }
-            });
-        </script>
-    </div>
+                        <div className="col-md-3">
+                            <h4>Allocation States</h4>
+                            <reactChartjs2.Doughnut
+                                data={{
+                                    labels: ["Pending", "Running", "Dead"],
+                                    datasets: [{
+                                        data: [dashboard.pendingAllocations, dashboard.runningAllocations, dashboard.deadAllocations],
+                                        backgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                                        hoverBackgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                                        borderColor: ['#1e1e1e', '#1e1e1e', '#1e1e1e']
+                                    }]
+                                }}
+                                options={{
+                                    cutoutPercentage: 75,
+                                    legend: {
+                                        labels: {
+                                            fontColor: "#dfdfdf"
+                                        }
+                                    }
+                                }}
+                                height={200}
+                            />
+                        </div>
 
-    <div class="col-md-3">
-        <h4>Allocation States</h4>
-        <canvas id="allocationsChart" height="200"></canvas>
-        <script>
-            var ctx = document.getElementById("allocationsChart");
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ["Pending", "Running", "Dead"],
-                    datasets: [{
-                        data: [@Model.PendingAllocations, @Model.RunningAllocations, @Model.DeadAllocations],
-                        backgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
-                        hoverBackgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
-                        borderColor: ['#1e1e1e', '#1e1e1e', '#1e1e1e']
-                    }]
-                },
-                options: {
-                    cutoutPercentage: 75,
-                    legend: {
-                        labels: {
-                            fontColor: "#dfdfdf"
-                        }
-                    }
-                }
-            });
-        </script>
-    </div>
+                        <div className="col-md-3">
+                            <h4>Client States</h4>
+                            <reactChartjs2.Doughnut
+                                data={{
+                                    labels: ["Up", "Down"],
+                                    datasets: [{
+                                        data: [dashboard.upClients, dashboard.downClients],
+                                        backgroundColor: ['#1fb58f', '#f24c4e'],
+                                        hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
+                                        borderColor: ['#1e1e1e', '#1e1e1e']
+                                    }]
+                                }}
+                                options={{
+                                    cutoutPercentage: 75,
+                                    legend: {
+                                        labels: {
+                                            fontColor: "#dfdfdf"
+                                        }
+                                    }
+                                }}
+                                height={200}
+                            />
+                        </div>
 
-    <div class="col-md-3">
-        <h4>Client States</h4>
-        <canvas id="clientsChart" height="200"></canvas>
-        <script>
-            var ctx = document.getElementById("clientsChart");
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ["Up", "Down"],
-                    datasets: [{
-                        data: [@Model.UpClients, @Model.DownClients],
-                        backgroundColor: ['#1fb58f', '#f24c4e'],
-                        hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
-                        borderColor: ['#1e1e1e', '#1e1e1e']
-                    }]
-                },
-                options: {
-                    cutoutPercentage: 75,
-                    legend: {
-                        labels: {
-                            fontColor: "#dfdfdf"
-                        }
-                    }
-                }
-            });
-        </script>
-    </div>
+                        <div className="col-md-3">
+                            <h4>Server States</h4>
+                            <reactChartjs2.Doughnut
+                                data={{
+                                    labels: ["Up", "Down"],
+                                    datasets: [{
+                                        data: [dashboard.upMembers, dashboard.downMembers],
+                                        backgroundColor: ['#1fb58f', '#f24c4e'],
+                                        hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
+                                        borderColor: ['#1e1e1e', '#1e1e1e']
+                                    }]
+                                }}
+                                options={{
+                                    cutoutPercentage: 75,
+                                    legend: {
+                                        labels: {
+                                            fontColor: "#dfdfdf"
+                                        }
+                                    }
+                                }}
+                                height={200}
+                            />
+                        </div>
+                    </div>
 
-    <div class="col-md-3">
-        <h4>Server States</h4>
-        <canvas id="serversChart" height="200"></canvas>
-        <script>
-            var ctx = document.getElementById("serversChart");
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ["Up", "Down"],
-                    datasets: [{
-                        data: [@Model.UpMembers, @Model.DownMembers],
-                        backgroundColor: ['#1fb58f', '#f24c4e'],
-                        hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
-                        borderColor: ['#1e1e1e', '#1e1e1e']
-                    }]
-                },
-                options: {
-                    cutoutPercentage: 75,
-                    legend: {
-                        labels: {
-                            fontColor: "#dfdfdf"
-                        }
-                    }
-                }
-            });
-        </script>
-    </div>
-</div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <h4>Allocation Events</h4>
+                            <table className="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Message</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {dashboard.events.map((event) => {
+                                        var d = new Date(event.dateTime);
+                                        
+                                        function addZero(i) {
+                                            if (i < 10) {
+                                                i = "0" + i;
+                                            }
+                                            
+                                            return i;
+                                        }
+                                        
+                                        return (
+                                            <tr>
+                                                <td>{event.allocationName}</td>
+                                                <td>{event.type}</td>
+                                                <td>
+                                                    {event.downloadError}
+                                                    {event.driverError}
+                                                    {event.driverMessage}
+                                                    {event.killError}
+                                                    {event.killReason}
+                                                    {event.message}
+                                                    {event.restartReason}
+                                                    {event.setupError}
+                                                    {event.taskSignalReason}
+                                                    {event.validationError}
+                                                    {event.vaultError}
+                                                </td>
+                                                <td>{d.getDate()}/{addZero((d.getMonth() + 1))}/{d.getFullYear()} {addZero(d.getHours())}:{addZero(d.getMinutes())}:{addZero(d.getSeconds())}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+    });
 
-<div class="row">
-    <div class="col-md-12">
-        <h4>Allocation Events</h4>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Message</th>
-                    <th>Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var @event in Model.Events.Take(15))
-                {
-                    <tr>
-                        <td><a href="/allocation?id=@(@event.AllocationId)">@(@event.AllocationName)</a></td>
-                        <td>@(@event.Type)</td>
-                        <td>
-                            @(@event.DownloadError)
-                            @(@event.DriverError)
-                            @(@event.DriverMessage)
-                            @(@event.KillError)
-                            @(@event.KillReason)
-                            @(@event.Message)
-                            @(@event.RestartReason)
-                            @(@event.SetupError)
-                            @(@event.TaskSignalReason)
-                            @(@event.ValidationError)
-                            @(@event.VaultError)
-                        </td>
-                        <td>@(@event.DateTime)</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+    ReactDOM.render(<App />, document.getElementById("dashboard"));
+</script>
