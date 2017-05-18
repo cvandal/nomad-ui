@@ -2,6 +2,14 @@
 
 Something something something Hashicorp doesn't provide a UI for Nomad something.
 
+### Prerequisites
+Enable CORS on the HTTP API endpoint by adding the following to your Nomad agent configuration:
+```
+http_api_response_headers {
+    "Access-Control-Allow-Origin" = "*"
+}
+```
+
 ### Usage
 ```
 docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 cvandal/nomad-ui:0.1.3
