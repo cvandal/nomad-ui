@@ -7,22 +7,13 @@ namespace Nomad.Controllers
 {
     public class DashboardController : Controller
     {
-        public async Task<IActionResult> Dashboard()
+        public IActionResult Index()
         {
-            var dashboard = await GetDashboardAsync();
-
-            return View("~/Views/Nomad/Dashboard.cshtml", dashboard);
+            return View("~/Views/Nomad/Dashboard.cshtml");
         }
 
         [Route("/api/dashboard")]
-        public async Task<IActionResult> DashboardApi()
-        {
-            var dashboard = await GetDashboardAsync();
-
-            return Json(dashboard);
-        }
-
-        public async Task<Dashboard> GetDashboardAsync()
+        public async Task<IActionResult> Dashboard()
         {
             var jobsTask = new JobController().GetJobsAsync();
             var allocationsTask = new AllocationController().GetAllocationsAsync();
@@ -40,7 +31,7 @@ namespace Nomad.Controllers
                 Events = new AllocationController().GetAllocationEvents(await allocationsTask)
             };
 
-            return dashboard;
+            return Json(dashboard);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Nomad
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Dashboard}/{action=Dashboard}");
+                    template: "{controller=Dashboard}/{action=Index}");
             });
         }
     }
