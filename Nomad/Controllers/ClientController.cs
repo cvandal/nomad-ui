@@ -50,7 +50,7 @@ namespace Nomad.Controllers
             foreach (var client in clients)
             {
                 if (client.Status == "ready") { client.Up++; }
-                if (client.Status == "down") { client.Down++; }
+                if (client.Status == "down" && !client.Drain) { client.Down++; }
             }
 
             return clients.OrderBy(c => c.Name).ToList();
