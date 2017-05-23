@@ -16,7 +16,7 @@ namespace Nomad.Controllers
         private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
         private static HttpClient HttpClient = new HttpClient();
 
-        [Route("/evaluations")]
+        [HttpGet("/evaluations")]
         public async Task<IActionResult> Evaluations(string search, int? page)
         {
             var evaluations = await GetEvaluationsAsync();
@@ -29,7 +29,7 @@ namespace Nomad.Controllers
             return View("~/Views/Nomad/Evaluations.cshtml", PaginatedList<Evaluation>.CreateAsync(evaluations, page ?? 1, 15));
         }
 
-        [Route("/evaluation")]
+        [HttpGet("/evaluation")]
         public async Task<IActionResult> Evaluation(string id)
         {
             var evaluation = await GetEvaluationAsync(id);

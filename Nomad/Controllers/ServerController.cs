@@ -16,7 +16,7 @@ namespace Nomad.Controllers
         private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
         private static HttpClient HttpClient = new HttpClient();
 
-        [Route("/servers")]
+        [HttpGet("/servers")]
         public async Task<IActionResult> Servers(string search, int? page)
         {
             var serverOperatorTask = GetServerOperatorsAsync();
@@ -35,7 +35,7 @@ namespace Nomad.Controllers
             return View("~/Views/Nomad/Servers.cshtml", PaginatedList<Member>.CreateAsync(servers, page ?? 1, 15));
         }
 
-        [Route("/server")]
+        [HttpGet("/server")]
         public async Task<IActionResult> Server(string ip)
         {
             var serverOperatorTask = GetServerOperatorsAsync();

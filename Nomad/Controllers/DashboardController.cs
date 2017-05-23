@@ -12,7 +12,7 @@ namespace Nomad.Controllers
             return View("~/Views/Nomad/Dashboard.cshtml");
         }
 
-        [Route("/api/dashboard")]
+        [HttpGet("/api/dashboard")]
         public async Task<IActionResult> Dashboard()
         {
             var jobsTask = new JobController().GetJobsAsync();

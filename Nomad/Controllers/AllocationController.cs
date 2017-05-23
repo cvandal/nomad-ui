@@ -16,7 +16,7 @@ namespace Nomad.Controllers
         private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
         private static HttpClient HttpClient = new HttpClient();
 
-        [Route("/allocations")]
+        [HttpGet("/allocations")]
         public async Task<IActionResult> Allocations(string search, int? page)
         {
             var allocations = await GetAllocationsAsync();
@@ -29,7 +29,7 @@ namespace Nomad.Controllers
             return View("~/Views/Nomad/Allocations.cshtml", PaginatedList<Allocation>.CreateAsync(allocations, page ?? 1, 15));
         }
 
-        [Route("/allocation")]
+        [HttpGet("/allocation")]
         public async Task<IActionResult> Allocation(string id)
         {
             var allocation = await GetAllocationAsync(id);
@@ -39,7 +39,7 @@ namespace Nomad.Controllers
             return View("~/Views/Nomad/Allocation.cshtml", allocation);
         }
 
-        [Route("/allocation/log")]
+        [HttpGet("/allocation/log")]
         public async Task<IActionResult> Log(string client, string id, string log)
         {
             string content = await GetAllocationLogAsync(client, id, log);
