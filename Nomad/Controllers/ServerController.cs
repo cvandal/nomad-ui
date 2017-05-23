@@ -17,7 +17,7 @@ namespace Nomad.Controllers
         private static HttpClient HttpClient = new HttpClient();
 
         [Route("/servers")]
-        public async Task<IActionResult> Servers(int? page)
+        public async Task<IActionResult> Servers(string search, int? page)
         {
             var serverOperatorTask = GetServerOperatorsAsync();
 
@@ -25,6 +25,11 @@ namespace Nomad.Controllers
             foreach (var server in servers)
             {
                 server.Operator = await serverOperatorTask;
+            }
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                servers = servers.Where(s => s.Name.ToLower().Contains(search.ToLower())).ToList();
             }
 
             return View("~/Views/Nomad/Servers.cshtml", PaginatedList<Member>.CreateAsync(servers, page ?? 1, 15));

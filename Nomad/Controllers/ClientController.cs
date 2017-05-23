@@ -17,9 +17,14 @@ namespace Nomad.Controllers
         private static HttpClient HttpClient = new HttpClient();
 
         [Route("/clients")]
-        public async Task<IActionResult> Clients(int? page)
+        public async Task<IActionResult> Clients(string search, int? page)
         {
             var clients = await GetClientsAsync();
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                clients = clients.Where(c => c.Name.ToLower().Contains(search.ToLower())).ToList();
+            }
 
             return View("~/Views/Nomad/Clients.cshtml", PaginatedList<Client>.CreateAsync(clients, page ?? 1, 15));
         }

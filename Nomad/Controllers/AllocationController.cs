@@ -17,9 +17,14 @@ namespace Nomad.Controllers
         private static HttpClient HttpClient = new HttpClient();
 
         [Route("/allocations")]
-        public async Task<IActionResult> Allocations(int? page)
+        public async Task<IActionResult> Allocations(string search, int? page)
         {
             var allocations = await GetAllocationsAsync();
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                allocations = allocations.Where(a => a.Name.ToLower().Contains(search.ToLower())).ToList();
+            }
 
             return View("~/Views/Nomad/Allocations.cshtml", PaginatedList<Allocation>.CreateAsync(allocations, page ?? 1, 15));
         }

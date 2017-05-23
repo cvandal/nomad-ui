@@ -37,7 +37,7 @@ a:focus {
 }
 
 .header-nav > .nav-link {
-    padding: 15px;
+    padding: 10px;
     color: #1e1e1e;
 }
 
@@ -48,6 +48,31 @@ a:focus {
     background-color: #1e1e1e;
 }
 
+.search {
+    border-bottom: solid 1px #333;
+}
+
+.search > input,
+.search > input:focus {
+    display: inline;
+    padding: 5px;
+    color: #1fb58f;
+    background-color: #1e1e1e;
+    border: none;
+    outline: none;
+    width: 50%;
+}
+
+.search > input::-webkit-input-placeholder { font-size: 2em; color: #1fb58f; }
+.search > ::-moz-placeholder { font-size: 2em; }
+.search > :-ms-input-placeholder { font-size: 2em; }
+.search > input:-moz-placeholder { font-size: 2em; }
+
+.search > h4 {
+    display: inline;
+    border: none;
+}
+
 .logs-nav {
     margin-bottom: 20px;
     background-color: #1e1e1e;
@@ -55,7 +80,7 @@ a:focus {
 
 .logs-nav > .nav-link {
     margin-right: 10px;
-    padding: 15px;
+    padding: 10px;
     color: #dfdfdf;
     border: solid 1px #1fb58f;
 }
@@ -86,7 +111,7 @@ a:focus {
 
 .pagination > .page-item > .page-link {
     margin-right: 10px;
-    padding: 15px;
+    padding: 10px;
     color: #dfdfdf;
     background-color: #1e1e1e;
     border: solid 1px #1fb58f;
