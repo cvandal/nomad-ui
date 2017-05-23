@@ -12,7 +12,7 @@ http_api_response_headers {
 
 ### Usage
 ```
-docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 cvandal/nomad-ui:0.3.0
+docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 cvandal/nomad-ui:0.3.1
 ```
 
 ### Development
