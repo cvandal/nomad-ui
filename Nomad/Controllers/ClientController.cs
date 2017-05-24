@@ -51,6 +51,7 @@ namespace Nomad.Controllers
             {
                 if (client.Status == "ready") { client.Up++; }
                 if (client.Status == "down" && !client.Drain) { client.Down++; }
+                if (client.Status == "down" && client.Drain) { client.Draining++; }
             }
 
             return clients.OrderBy(c => c.Name).ToList();
