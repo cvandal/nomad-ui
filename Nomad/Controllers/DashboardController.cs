@@ -13,7 +13,7 @@ namespace Nomad.Controllers
         }
 
         [HttpGet("/api/dashboard")]
-        public async Task<IActionResult> Dashboard()
+        public async Task<IActionResult> Dashboard(int count)
         {
             var jobsTask = new JobController().GetJobsAsync();
             var allocationsTask = new AllocationController().GetAllocationsAsync();
@@ -28,7 +28,7 @@ namespace Nomad.Controllers
                 Allocations = await allocationsTask,
                 Clients = await clientsTask,
                 Servers = await serverTask,
-                Events = new AllocationController().GetAllocationEvents(await allocationsTask)
+                Events = new AllocationController().GetAllocationEvents(await allocationsTask, count)
             };
 
             return Json(dashboard);
