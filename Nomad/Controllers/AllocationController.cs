@@ -62,7 +62,7 @@ namespace Nomad.Controllers
             return JsonConvert.DeserializeObject<Allocation>(result);
         }
 
-        public List<Event> GetAllocationEvents(List<Allocation> allocations)
+        public List<Event> GetAllocationEvents(List<Allocation> allocations, int count)
         {
             var events = new List<Event>();
 
@@ -85,6 +85,11 @@ namespace Nomad.Controllers
                         events.Add(@event);
                     }
                 }
+            }
+
+            if (count > 0)
+            {
+                return events.OrderByDescending(e => e.Time).Take(count).ToList();
             }
 
             return events.OrderByDescending(e => e.Time).ToList();
