@@ -31,6 +31,7 @@ namespace Nomad.Models
         // Custom Properties
         public long Up { get; set; }
         public long Down { get; set; }
+        public long Draining { get; set; }
     }
 
     public class Reserved
