@@ -103,6 +103,11 @@ a:focus {
     background-color: #333;
 }
 
+.table > thead > .row,
+.table > tbody > .row {
+    margin-left: 0px;
+}
+
 .list-group-item {
     color: #dfdfdf;
     background-color: #1e1e1e;
