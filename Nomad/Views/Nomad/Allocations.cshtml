@@ -15,25 +15,25 @@
         
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Task Group</th>
-                    <th>Desired Status</th>
-                    <th>Client Status</th>
-                    <th>Create Time</th>
+                <tr class="row">
+                    <th class="col">ID</th>
+                    <th class="col">Name</th>
+                    <th class="col">Task Group</th>
+                    <th class="col">Desired Status</th>
+                    <th class="col">Client Status</th>
+                    <th class="col">Create Time</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var allocation in Model)
                 {
-                    <tr>
-                        <td><a href="/allocation?id=@allocation.ID">@allocation.ID</a></td>
-                        <td>@allocation.Name</td>
-                        <td>@allocation.TaskGroup</td>
-                        <td>@allocation.DesiredStatus</td>
-                        <td>@allocation.ClientStatus</td>
-                        <td>@allocation.CreateDateTime</td>
+                    <tr class="row">
+                        <td class="col"><a href="/allocation?id=@allocation.ID">@allocation.ID</a></td>
+                        <td class="col">@allocation.Name</td>
+                        <td class="col">@allocation.TaskGroup</td>
+                        <td class="col">@allocation.DesiredStatus</td>
+                        <td class="col">@allocation.ClientStatus</td>
+                        <td class="col">@allocation.CreateDateTime</td>
                     </tr>
                 }
             </tbody>

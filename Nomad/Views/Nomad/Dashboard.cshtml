@@ -9,7 +9,7 @@
         },
         
         componentDidMount: function() {
-            const makeRequest = () => axios.get("/api/dashboard").then(({ data }) => this.setState({ dashboard: data }));
+            const makeRequest = () => axios.get("/api/dashboard?count=15").then(({ data }) => this.setState({ dashboard: data }));
             
             this.serverRequest = makeRequest();
             
@@ -85,12 +85,12 @@
                             <h4>Client States</h4>
                             <reactChartjs2.Doughnut
                                 data={{
-                                    labels: ["Up", "Down"],
+                                    labels: ["Draining", "Up", "Down"],
                                     datasets: [{
-                                        data: [dashboard.upClients, dashboard.downClients],
-                                        backgroundColor: ['#1fb58f', '#f24c4e'],
-                                        hoverBackgroundColor: ['#1fb58f', '#f24c4e'],
-                                        borderColor: ['#1e1e1e', '#1e1e1e']
+                                        data: [dashboard.drainingClients, dashboard.upClients, dashboard.downClients],
+                                        backgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                                        hoverBackgroundColor: ['#eab126', '#1fb58f', '#f24c4e'],
+                                        borderColor: ['#1e1e1e', '#1e1e1e', '#1e1e1e']
                                     }]
                                 }}
                                 options={{
@@ -135,11 +135,11 @@
                             <h4>Allocation Events</h4>
                             <table className="table table-hover">
                                 <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Type</th>
-                                        <th>Message</th>
-                                        <th>Time</th>
+                                    <tr className="row">
+                                        <th className="col">Name</th>
+                                        <th className="col">Type</th>
+                                        <th className="col">Message</th>
+                                        <th className="col">Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -157,10 +157,10 @@
                                         var ampm = d.getHours() >= 12 ? "PM" : "AM";
                                         
                                         return (
-                                            <tr>
-                                                <td><a href={"/allocation?id=" + event.allocationId}>{event.allocationName}</a></td>
-                                                <td>{event.type}</td>
-                                                <td>
+                                            <tr className="row">
+                                                <td className="col"><a href={"/allocation?id=" + event.allocationId}>{event.allocationName}</a></td>
+                                                <td className="col">{event.type}</td>
+                                                <td className="col">
                                                     {event.downloadError}
                                                     {event.driverError}
                                                     {event.driverMessage}
@@ -173,7 +173,7 @@
                                                     {event.validationError}
                                                     {event.vaultError}
                                                 </td>
-                                                <td>{d.getDate()}/{addZero((d.getMonth() + 1))}/{d.getFullYear()} {addZero(d.getHours())}:{addZero(d.getMinutes())}:{addZero(d.getSeconds())} {ampm}</td>
+                                                <td className="col">{d.getDate()}/{addZero((d.getMonth() + 1))}/{d.getFullYear()} {addZero(d.getHours())}:{addZero(d.getMinutes())}:{addZero(d.getSeconds())} {ampm}</td>
                                             </tr>
                                         )
                                     })}

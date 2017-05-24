@@ -15,23 +15,23 @@
 
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Datacenter</th>
-                    <th>Drain</th>
-                    <th>Status</th>
+                <tr class="row">
+                    <th class="col">ID</th>
+                    <th class="col">Name</th>
+                    <th class="col">Datacenter</th>
+                    <th class="col">Drain</th>
+                    <th class="col">Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var client in Model)
                 {
-                    <tr>
-                        <td><a href="/client?id=@client.ID">@client.ID</a></td>
-                        <td>@client.Name</td>
-                        <td>@client.Datacenter</td>
-                        <td>@client.Drain</td>
-                        <td>@client.Status</td>
+                    <tr class="row">
+                        <td class="col"><a href="/client?id=@client.ID">@client.ID</a></td>
+                        <td class="col">@client.Name</td>
+                        <td class="col">@client.Datacenter</td>
+                        <td class="col">@client.Drain</td>
+                        <td class="col">@client.Status</td>
                     </tr>
                 }
             </tbody>

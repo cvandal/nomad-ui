@@ -63,12 +63,12 @@
 
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Network Mode</th>
-                    <th>Command</th>
-                    <th>Arguments</th>
-                    <th>Environment Variables</th>
+                <tr class="row">
+                    <th class="col-md-4">Image</th>
+                    <th class="col-md-1">Network Mode</th>
+                    <th class="col-md-1">Command</th>
+                    <th class="col-md-2">Arguments</th>
+                    <th class="col-md-4">Environment Variables</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,12 +76,12 @@
                 {
                     @foreach (var task in taskGroup.Tasks)
                     {
-                        <tr>
-                            <td>@task.Config.Image</td>
-                            <td>@task.Config.Network_Mode</td>
-                            <td>@if (task.Config.Command != null) { @task.Config.Command }</td>
-                            <td>@if (task.Config.Args != null) { @Html.Raw(String.Join("<br />", task.Config.Args)) }</td>
-                            <td>@if (task.Env != null) { @Html.Raw(String.Join("<br />", task.Env.Select(e => e.Key + " = " + e.Value))) }</td>
+                        <tr class="row">
+                            <td class="col-md-4">@task.Config.Image</td>
+                            <td class="col-md-1">@task.Config.Network_Mode</td>
+                            <td class="col-md-1">@if (task.Config.Command != null) { @task.Config.Command }</td>
+                            <td class="col-md-2">@if (task.Config.Args != null) { @Html.Raw(String.Join("<br />", task.Config.Args)) }</td>
+                            <td class="col-md-4">@if (task.Env != null) { @Html.Raw(String.Join("<br />", task.Env.Select(e => e.Key + " = " + e.Value))) }</td>
                         </tr>
                     }
                 }
@@ -96,25 +96,25 @@
 
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Job ID</th>
-                    <th>Type</th>
-                    <th>Priority</th>
-                    <th>Triggered By</th>
-                    <th>Status</th>
+                <tr class="row">
+                    <th class="col">ID</th>
+                    <th class="col">Job ID</th>
+                    <th class="col">Type</th>
+                    <th class="col">Priority</th>
+                    <th class="col">Triggered By</th>
+                    <th class="col">Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var evaluation in Model.Evaluations)
                 {
-                    <tr>
-                        <td><a href="/evaluation?id=@evaluation.ID">@evaluation.ID</a></td>
-                        <td>@evaluation.JobID</td>
-                        <td>@evaluation.Type</td>
-                        <td>@evaluation.Priority</td>
-                        <td>@evaluation.TriggeredBy</td>
-                        <td>@evaluation.Status</td>
+                    <tr class="row">
+                        <td class="col"><a href="/evaluation?id=@evaluation.ID">@evaluation.ID</a></td>
+                        <td class="col">@evaluation.JobID</td>
+                        <td class="col">@evaluation.Type</td>
+                        <td class="col">@evaluation.Priority</td>
+                        <td class="col">@evaluation.TriggeredBy</td>
+                        <td class="col">@evaluation.Status</td>
                     </tr>
                 }
             </tbody>
@@ -128,25 +128,25 @@
 
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Task Group</th>
-                    <th>Desired Status</th>
-                    <th>Client Status</th>
-                    <th>Create Time</th>
+                <tr class="row">
+                    <th class="col">ID</th>
+                    <th class="col">Name</th>
+                    <th class="col">Task Group</th>
+                    <th class="col">Desired Status</th>
+                    <th class="col">Client Status</th>
+                    <th class="col">Create Time</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var allocation in Model.Allocations)
                 {
-                    <tr>
-                        <td><a href="/allocation?id=@allocation.ID">@allocation.ID</a></td>
-                        <td>@allocation.Name</td>
-                        <td>@allocation.TaskGroup</td>
-                        <td>@allocation.DesiredStatus</td>
-                        <td>@allocation.ClientStatus</td>
-                        <td>@allocation.CreateDateTime</td>
+                    <tr class="row">
+                        <td class="col"><a href="/allocation?id=@allocation.ID">@allocation.ID</a></td>
+                        <td class="col">@allocation.Name</td>
+                        <td class="col">@allocation.TaskGroup</td>
+                        <td class="col">@allocation.DesiredStatus</td>
+                        <td class="col">@allocation.ClientStatus</td>
+                        <td class="col">@allocation.CreateDateTime</td>
                     </tr>
                 }
             </tbody>

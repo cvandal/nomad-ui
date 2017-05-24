@@ -174,11 +174,11 @@
 
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Message</th>
-                    <th>Time</th>
+                <tr class="row">
+                    <th class="col">Name</th>
+                    <th class="col">Type</th>
+                    <th class="col">Message</th>
+                    <th class="col">Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -186,10 +186,10 @@
                 {
                     @foreach (var @event in Model.TaskStates[key].Events.OrderByDescending(t => t.Time))
                     {
-                        <tr>
-                            <td>@Model.Name</td>
-                            <td>@(@event.Type)</td>
-                            <td>
+                        <tr class="row">
+                            <td class="col">@Model.Name</td>
+                            <td class="col">@(@event.Type)</td>
+                            <td class="col">
                                 @(@event.DownloadError)
                                 @(@event.DriverError)
                                 @(@event.DriverMessage)
@@ -202,7 +202,7 @@
                                 @(@event.ValidationError)
                                 @(@event.VaultError)
                             </td>
-                            <td>@(@event.DateTime)</td>
+                            <td class="col">@(@event.DateTime)</td>
                         </tr>
                     }
                 }

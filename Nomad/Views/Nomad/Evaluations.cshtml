@@ -15,25 +15,25 @@
         
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Job ID</th>
-                    <th>Type</th>
-                    <th>Priority</th>
-                    <th>Triggered By</th>
-                    <th>Status</th>
+                <tr class="row">
+                    <th class="col">ID</th>
+                    <th class="col">Job ID</th>
+                    <th class="col">Type</th>
+                    <th class="col">Priority</th>
+                    <th class="col">Triggered By</th>
+                    <th class="col">Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var evaluation in Model)
                 {
-                    <tr>
-                        <td><a href="/evaluation?id=@evaluation.ID">@evaluation.ID</a></td>
-                        <td><a href="/job?id=@evaluation.JobID">@evaluation.JobID</a></td>
-                        <td>@evaluation.Type</td>
-                        <td>@evaluation.Priority</td>
-                        <td>@evaluation.TriggeredBy</td>
-                        <td>@evaluation.Status</td>
+                    <tr class="row">
+                        <td class="col"><a href="/evaluation?id=@evaluation.ID">@evaluation.ID</a></td>
+                        <td class="col"><a href="/job?id=@evaluation.JobID">@evaluation.JobID</a></td>
+                        <td class="col">@evaluation.Type</td>
+                        <td class="col">@evaluation.Priority</td>
+                        <td class="col">@evaluation.TriggeredBy</td>
+                        <td class="col">@evaluation.Status</td>
                     </tr>
                 }
             </tbody>

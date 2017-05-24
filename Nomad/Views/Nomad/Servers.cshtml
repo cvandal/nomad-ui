@@ -15,29 +15,29 @@
 
         <table class="table table-hover">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Port</th>
-                    <th>Status</th>
-                    <th>Voter</th>
-                    <th>Leader</th>
+                <tr class="row">
+                    <th class="col">Name</th>
+                    <th class="col">Address</th>
+                    <th class="col">Port</th>
+                    <th class="col">Status</th>
+                    <th class="col">Voter</th>
+                    <th class="col">Leader</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var member in Model)
                 {
-                    <tr>
-                        <td><a href="/server?ip=@member.Addr">@member.Name</a></td>
-                        <td>@member.Addr</td>
-                        <td>@member.Port</td>
-                        <td>@member.Status</td>
+                    <tr class="row">
+                        <td class="col"><a href="/server?ip=@member.Addr">@member.Name</a></td>
+                        <td class="col">@member.Addr</td>
+                        <td class="col">@member.Port</td>
+                        <td class="col">@member.Status</td>
                         @foreach (var server in member.Operator.Servers)
                         {
                             @if (server.Node == member.Name)
                             {
-                                <td>@server.Voter</td>
-                                <td>@server.Leader</td>
+                                <td class="col">@server.Voter</td>
+                                <td class="col">@server.Leader</td>
                             }
                         }
                     </tr>
