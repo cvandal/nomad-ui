@@ -2,23 +2,23 @@
 
 Something something something Hashicorp doesn't provide a free UI for Nomad something.
 
-### Prerequisites
-Enable CORS on the HTTP API endpoint by adding the following to your Nomad agent configuration:
-```
-http_api_response_headers {
-    "Access-Control-Allow-Origin" = "*"
-}
-```
-
 ### Usage
+1. Create a file named `env.list` with the following content:
 ```
-docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 cvandal/nomad-ui:0.3.1
+NOMAD_URL=http://<base_url>:<port>
+ASPNETCORE_URLS=http://*:5000
+
+# Optional Environment Variables
+OPENID_CLIENTID=
+OPENID_CLIENTSECRET=
+OPENID_AUTHORITY=
 ```
+2. Run `docker run -itd --env-file ./path/to/env.list -p 5000:5000 cvandal/nomad-ui:0.4.0`
 
 ### Development
 1. Run `git clone git@github.com:cvandal/nomad-ui.git` or `git clone https://github.com/cvandal/nomad-ui.git`
 2. Run `dotnet restore`, followed by `dotnet build`, followed by `dotnet publish`
-3. Run `cd .\Nomad\bin\Debug\netcoreapp1.1\publish\` and create a `Dockerfile` in the publish output directory with the following content:
+3. Run `cd .\Nomad\bin\Debug\netcoreapp1.1\publish\` and create a file named `Dockerfile` with the following content:
 ```
 FROM microsoft/dotnet
 
