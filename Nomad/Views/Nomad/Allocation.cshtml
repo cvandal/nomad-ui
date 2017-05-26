@@ -50,13 +50,13 @@
                 },
                 
                 componentDidMount: function() {
-                    const makeRequest = () => axios.get("http://@(Model.Resources.Networks.FirstOrDefault().IP):4646/v1/client/allocation/@Model.ID/stats").then(({ data }) => this.setState({ client: data }));
+                    const makeRequest = () => axios.get("/api/allocation/stats?client=@Model.Resources.Networks.FirstOrDefault().IP&id=@Model.ID").then(({ data }) => this.setState({ client: data }));
                     
                     this.serverRequest = makeRequest();
                     
                     this.poll = setInterval(() => {
                         this.serverRequest = makeRequest();
-                    }, 3000) // Poll every 3 seconds
+                    }, 1000) // Poll every 1 seconds
                 },
                 
                 componentWillUnmount: function() {
@@ -71,10 +71,10 @@
                         return null
                     }
                     
-                    var idleCpu = (100 - client.ResourceUsage.CpuStats.Percent);
-                    var activeCpu = client.ResourceUsage.CpuStats.Percent;
-                    var availableMem = (@Model.Resources.MemoryMB - (client.ResourceUsage.MemoryStats.MaxUsage / 1024) / 1024);
-                    var consumedMem = ((client.ResourceUsage.MemoryStats.MaxUsage / 1024) / 1024);
+                    var idleCpu = (100 - client.resourceUsage.cpuStats.percent);
+                    var activeCpu = client.resourceUsage.cpuStats.percent;
+                    var availableMem = (@Model.Resources.MemoryMB - (client.resourceUsage.memoryStats.maxUsage / 1024) / 1024);
+                    var consumedMem = ((client.resourceUsage.memoryStats.maxUsage / 1024) / 1024);
                     
                     return (
                         <div className="row spacer">
@@ -94,7 +94,7 @@
                                         cutoutPercentage: 75,
                                         legend: {
                                             labels: {
-                                                fontColor: "#dfdfdf"
+                                                fontColor: "#fff"
                                             }
                                         }
                                     }}
@@ -118,7 +118,7 @@
                                         cutoutPercentage: 75,
                                         legend: {
                                             labels: {
-                                                fontColor: "#dfdfdf"
+                                                fontColor: "#fff"
                                             }
                                         }
                                     }}
@@ -137,12 +137,12 @@
     <div class="col-md-6">
         <h4>Logs</h4>
 
-        <nav class="nav logs-nav">
+        <ul class="nav logs-nav">
             @foreach (var log in Model.Logs.OrderBy(l => l.Name))
             {
-                <a class="nav-link log" href="#">@log.Name</a>
+                <li class="nav-item"><a class="nav-link log" href="#">@log.Name</a></li>
             }
-        </nav>
+        </ul>
 
         <div id="log">
             <pre><code></code></pre>

@@ -1,5 +1,11 @@
 ﻿<!DOCTYPE html>
 
+@{
+    var clientId = Environment.GetEnvironmentVariable("OPENID_CLIENTID");
+    var clientSecret = Environment.GetEnvironmentVariable("OPENID_CLIENTSECRET");
+    var authority = Environment.GetEnvironmentVariable("OPENID_AUTHORITY");
+}
+
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -8,6 +14,7 @@
         <title>Nomad</title>
 
         <link rel="stylesheet" href="~/css/bootstrap-4.0.0-alpha.6.min.css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="~/css/site.css" />
 
         <!-- jQuery -->
@@ -19,14 +26,33 @@
     </head>
 
     <body>
-        <nav class="nav header-nav">
-            <a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "dashboard" ? "nav-link active" : "nav-link")" href="/">Dashboard</a>
-            <a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "job" ? "nav-link active" : "nav-link")" href="/jobs">Jobs</a>
-            <a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "evaluation" ? "nav-link active" : "nav-link")" href="/evaluations">Evaluations</a>
-            <a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "allocation" ? "nav-link active" : "nav-link")" href="/allocations">Allocations</a>
-            <a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "client" ? "nav-link active" : "nav-link")" href="/clients">Clients</a>
-            <a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "server" ? "nav-link active" : "nav-link")" href="/servers">Servers</a>
-        </nav>
+        <div class="">
+            <ul class="nav header-nav">
+                <li class="nav-item"><a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "dashboard" ? "nav-link active" : "nav-link")" href="/">Dashboard</a></li>
+                <li class="nav-item"><a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "job" ? "nav-link active" : "nav-link")" href="/jobs">Jobs</a></li>
+                <li class="nav-item"><a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "evaluation" ? "nav-link active" : "nav-link")" href="/evaluations">Evaluations</a></li>
+                <li class="nav-item"><a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "allocation" ? "nav-link active" : "nav-link")" href="/allocations">Allocations</a></li>
+                <li class="nav-item"><a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "client" ? "nav-link active" : "nav-link")" href="/clients">Clients</a></li>
+                <li class="nav-item"><a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "server" ? "nav-link active" : "nav-link")" href="/servers">Servers</a></li>
+                @if (!string.IsNullOrEmpty(clientId) || !string.IsNullOrEmpty(clientSecret) || !string.IsNullOrEmpty(authority))
+                {
+                    <li class="nav-item dropdown header-nav-manage">
+                        <a class="@(ViewContext.RouteData.Values["Controller"].ToString().ToLower() == "authentication" ? "nav-link dropdown-toggle material-icons active" : "nav-link dropdown-toggle material-icons")" data-toggle="dropdown" href="#">person</a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="dropdown-item" href="/account">Account</a>
+                                <a class="dropdown-item" href="/signout">Logout</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" href="/signin">Login</a>
+                            }
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
 
         <div class="container-fluid">
             <div class="row">

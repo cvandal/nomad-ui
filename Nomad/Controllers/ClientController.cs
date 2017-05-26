@@ -39,6 +39,14 @@ namespace Nomad.Controllers
             return View("~/Views/Nomad/Client.cshtml", client);
         }
 
+        [HttpGet("/api/client/stats")]
+        public async Task<IActionResult> Stats(string client)
+        {
+            var stats = await GetClientStatsAsync(client);
+
+            return Json(stats);
+        }
+
         public async Task<List<Client>> GetClientsAsync()
         {
             List<Client> clients;
@@ -65,9 +73,9 @@ namespace Nomad.Controllers
             return JsonConvert.DeserializeObject<Client>(result);
         }
 
-        public async Task<Stats> GetClientStatsAsync(string ip)
+        public async Task<Stats> GetClientStatsAsync(string client)
         {
-            var result = await HttpClient.GetAsync("http://" + ip + ":4646/v1/client/stats").Result.Content.ReadAsStringAsync();
+            var result = await HttpClient.GetAsync("http://" + client + ":4646/v1/client/stats").Result.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<Stats>(result);
         }

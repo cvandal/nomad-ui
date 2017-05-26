@@ -78,13 +78,13 @@
         },
             
         componentDidMount: function() {
-            const makeRequest = () => axios.get("http://@(Model.Resources.Networks.FirstOrDefault().IP):4646/v1/client/stats").then(({ data }) => this.setState({ client: data }));
+            const makeRequest = () => axios.get("/api/client/stats?client=@Model.Resources.Networks.FirstOrDefault().IP").then(({ data }) => this.setState({ client: data }));
             
             this.serverRequest = makeRequest();
             
             this.poll = setInterval(() => {
                 this.serverRequest = makeRequest();
-            }, 3000) // Poll every 3 seconds
+            }, 1000) // Poll every 1 seconds
         },
 
         componentWillUnmount: function() {
@@ -114,7 +114,7 @@
                                 data={{
                                     labels: ["Idle %", "Active %"],
                                     datasets: [{
-                                        data: [client.CPU[@count].Idle, client.CPU[@count].Total],
+                                        data: [client.cpu[@count].idle, client.cpu[@count].total],
                                         backgroundColor: ['#1fb58f', '#eab126'],
                                         hoverBackgroundColor: ['#1fb58f', '#eab126'],
                                         borderColor: ['#1e1e1e', '#1e1e1e']
@@ -124,7 +124,7 @@
                                     cutoutPercentage: 75,
                                     legend: {
                                         labels: {
-                                            fontColor: "#dfdfdf"
+                                            fontColor: "#fff"
                                         }
                                     }
                                 }}
@@ -141,7 +141,7 @@
                             data={{
                                 labels: ["Available MB", "Consumed MB"],
                                 datasets: [{
-                                    data: [client.Memory.Available, client.Memory.Used],
+                                    data: [client.memory.available, client.memory.used],
                                     backgroundColor: ['#1fb58f', '#eab126'],
                                     hoverBackgroundColor: ['#1fb58f', '#eab126'],
                                     borderColor: ['#1e1e1e', '#1e1e1e']
@@ -151,7 +151,7 @@
                                 cutoutPercentage: 75,
                                 legend: {
                                     labels: {
-                                        fontColor: "#dfdfdf"
+                                        fontColor: "#fff"
                                     }
                                 }
                             }}

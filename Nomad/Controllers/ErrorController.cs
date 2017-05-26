@@ -7,7 +7,7 @@ namespace Nomad.Controllers
         [HttpGet("/error/{statusCode}")]
         public IActionResult Error(int statusCode)
         {
-            return View("~/Views/Nomad/Error.cshtml", statusCode);
+            return View("~/Views/Shared/Error.cshtml", statusCode);
         }
     }
 }

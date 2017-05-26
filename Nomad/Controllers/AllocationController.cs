@@ -47,6 +47,14 @@ namespace Nomad.Controllers
             return Content(content);
         }
 
+        [HttpGet("/api/allocation/stats")]
+        public async Task<IActionResult> Stats(string client, string id)
+        {
+            var stats = await GetAllocationStatsAsync(client, id);
+
+            return Json(stats);
+        }
+
         public async Task<List<Allocation>> GetAllocationsAsync()
         {
             var result = await HttpClient.GetAsync(NomadUrl + "/v1/allocations").Result.Content.ReadAsStringAsync();
