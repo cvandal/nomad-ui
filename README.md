@@ -7,13 +7,8 @@ Something something something Hashicorp doesn't provide a free UI for Nomad some
 ```
 NOMAD_URL=http://<base_url>:<port>
 ASPNETCORE_URLS=http://*:5000
-
-# Optional Environment Variables
-OPENID_CLIENTID=
-OPENID_CLIENTSECRET=
-OPENID_AUTHORITY=
 ```
-2. Run `docker run -itd --env-file ./path/to/env.list -p 5000:5000 cvandal/nomad-ui:0.4.0`
+2. Run `docker run -itd --env-file ./path/to/env.list -p 5000:5000 cvandal/nomad-ui:0.5.0`
 
 ### Development
 1. Run `git clone git@github.com:cvandal/nomad-ui.git` or `git clone https://github.com/cvandal/nomad-ui.git`
