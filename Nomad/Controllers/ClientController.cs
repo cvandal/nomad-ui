@@ -26,7 +26,9 @@ namespace Nomad.Controllers
                 clients = clients.Where(c => c.Name.ToLower().Contains(search.ToLower())).ToList();
             }
 
-            return View("~/Views/Nomad/Clients.cshtml", PaginatedList<Client>.CreateAsync(clients, page ?? 1, 15));
+            ViewData["search"] = search;
+
+            return View("~/Views/Nomad/Clients.cshtml", PaginatedListExtension<Client>.CreateAsync(clients, page ?? 1, 15));
         }
 
         [HttpGet("/client")]

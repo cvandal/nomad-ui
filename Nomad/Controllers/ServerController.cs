@@ -32,7 +32,9 @@ namespace Nomad.Controllers
                 servers = servers.Where(s => s.Name.ToLower().Contains(search.ToLower())).ToList();
             }
 
-            return View("~/Views/Nomad/Servers.cshtml", PaginatedList<Member>.CreateAsync(servers, page ?? 1, 15));
+            ViewData["search"] = search;
+
+            return View("~/Views/Nomad/Servers.cshtml", PaginatedListExtension<Member>.CreateAsync(servers, page ?? 1, 15));
         }
 
         [HttpGet("/server")]

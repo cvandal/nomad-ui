@@ -26,7 +26,9 @@ namespace Nomad.Controllers
                 jobs = jobs.Where(j => j.ID.ToLower().Contains(search.ToLower())).ToList();
             }
 
-            return View("~/Views/Nomad/Jobs.cshtml", PaginatedList<Job>.CreateAsync(jobs, page ?? 1, 15));
+            ViewData["search"] = search;
+
+            return View("~/Views/Nomad/Jobs.cshtml", PaginatedListExtension<Job>.CreateAsync(jobs, page ?? 1, 15));
         }
 
         [HttpGet("/job")]

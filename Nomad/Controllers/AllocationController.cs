@@ -26,7 +26,9 @@ namespace Nomad.Controllers
                 allocations = allocations.Where(a => a.Name.ToLower().Contains(search.ToLower())).ToList();
             }
 
-            return View("~/Views/Nomad/Allocations.cshtml", PaginatedList<Allocation>.CreateAsync(allocations, page ?? 1, 15));
+            ViewData["search"] = search;
+
+            return View("~/Views/Nomad/Allocations.cshtml", PaginatedListExtension<Allocation>.CreateAsync(allocations, page ?? 1, 15));
         }
 
         [HttpGet("/allocation")]
