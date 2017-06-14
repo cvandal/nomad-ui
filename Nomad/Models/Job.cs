@@ -12,13 +12,13 @@ namespace Nomad.Models
         public long Priority { get; set; }
         public bool AllAtOnce { get; set; }
         public List<string> Datacenters { get; set; }
-        public object[] Constraints { get; set; }
+        public List<Constraint> Constraints { get; set; }
         public List<TaskGroup> TaskGroups { get; set; }
         public Update Update { get; set; }
         public object Periodic { get; set; }
         public object ParameterizedJob { get; set; }
         public object Payload { get; set; }
-        public object Meta { get; set; }
+        public Dictionary<string, dynamic> Meta { get; set; }
         public string VaultToken { get; set; }
         public string Status { get; set; }
         public string StatusDescription { get; set; }
@@ -35,15 +35,22 @@ namespace Nomad.Models
         public long Running { get; set; }
     }
 
+    public class Constraint
+    {
+        public string LTarget { get; set; }
+        public string RTarget { get; set; }
+        public string Operand { get; set; }
+    }
+
     public class TaskGroup
     {
         public string Name { get; set; }
         public long Count { get; set; }
-        public object[] Constraints { get; set; }
+        public List<Constraint> Constraints { get; set; }
         public RestartPolicy RestartPolicy { get; set; }
         public List<Task> Tasks { get; set; }
         public EphemeralDisk EphemeralDisk { get; set; }
-        public object Meta { get; set; }
+        public Dictionary<string, dynamic> Meta { get; set; }
     }
 
     public class RestartPolicy
@@ -67,7 +74,8 @@ namespace Nomad.Models
         public object Constralongs { get; set; }
         public Resources Resources { get; set; }
         public object DispatchPayload { get; set; }
-        public object Meta { get; set; }
+        public List<Constraint> Constraints { get; set; }
+        public Dictionary<string, dynamic> Meta { get; set; }
         public long KillTimeout { get; set; }
         public LogConfig LogConfig { get; set; }
         public List<object> Artifacts { get; set; }
@@ -159,15 +167,10 @@ namespace Nomad.Models
     public class JobSummary
     {
         public string JobID { get; set; }
-        public Summary Summary { get; set; }
+        public Dictionary<string, TaskGroupStatus> Summary { get; set; }
         public object Children { get; set; }
         public long CreateIndex { get; set; }
         public long ModifyIndex { get; set; }
-    }
-
-    public class Summary
-    {
-        public Dictionary<string, TaskGroupStatus> TaskGroupStatus { get; set; }
     }
 
     public class TaskGroupStatus
