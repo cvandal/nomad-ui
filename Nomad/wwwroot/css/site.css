@@ -1,4 +1,34 @@
-﻿* {
+﻿@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(MaterialIcons-Regular.eot); /* For IE6-8 */
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(MaterialIcons-Regular.woff2) format('woff2'), url(MaterialIcons-Regular.woff) format('woff'), url(MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+* {
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     border-radius: 0 !important;
@@ -123,23 +153,15 @@ a:focus {
     border: none;
 }
 
-.logs-nav {
-    margin-bottom: 20px;
+.list-group-item-condensed {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.logs > .active {
     background-color: #1e1e1e;
-}
-
-.logs-nav > .nav-item > .nav-link {
-    margin-right: 10px;
-    padding: 10px;
-    color: #fff;
-    border: solid 1px #1fb58f;
-}
-
-.logs-nav > .nav-item > .nav-link:hover,
-.logs-nav > .nav-item > .active
- {
-    color: #1e1e1e;
-    background-color: #1fb58f;
     border: solid 1px #1fb58f;
 }
 
@@ -149,13 +171,32 @@ a:focus {
     border: none;
 }
 
-.table > tbody > tr:hover {
-    background-color: #333;
+.table > tbody > tr:hover,
+.table > tbody > tr:hover .tableception {
+    background-color: #333 !important;
 }
 
 .table > thead > .row,
 .table > tbody > .row {
     margin-left: 0px;
+}
+
+.tableception {
+    background-color: #1e1e1e !important;
+}
+
+.tableception > thead > tr > th {
+    padding-top: 0;
+    padding-left: 0;
+}
+
+.tableception > thead > tr:hover {
+    background-color: #333 !important;
+}
+
+.tableception > tbody > tr > td {
+    margin-left: 0;
+    padding-left: 0;
 }
 
 .list-group-item {
@@ -205,13 +246,9 @@ a:focus {
     color: #eab126;
 }
 
-#log > pre {
-    white-space: pre-wrap;
-    max-height: 700px;
-}
-
 #attributeModal > .modal-dialog > .modal-content {
-    background-color: #1fb58f;
+    background-color: #1e1e1e;
+    border: solid 1px #1fb58f;
 }
 
 #attributeModal > .modal-dialog > .modal-content > .modal-body {
@@ -229,6 +266,10 @@ a:focus {
 
 .spacer {
     margin-bottom: 50px;
+}
+
+.clear {
+    clear: both;
 }
 
 .error {
