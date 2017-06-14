@@ -1,21 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
-using System;
 
 namespace Nomad
 {
     public class Startup
     {
-        private static readonly string ClientId = Environment.GetEnvironmentVariable("OPENID_CLIENTID");
-        private static readonly string ClientSecret = Environment.GetEnvironmentVariable("OPENID_CLIENTSECRET");
-        private static readonly string Authority = Environment.GetEnvironmentVariable("OPENID_AUTHORITY");
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -52,30 +45,6 @@ namespace Nomad
             {
                 app.UseExceptionHandler("/error");
                 app.UseStatusCodePagesWithReExecute("/error/{0}");
-            }
-
-            if (!string.IsNullOrEmpty(ClientId) || !string.IsNullOrEmpty(ClientSecret) || !string.IsNullOrEmpty(Authority))
-            {
-                app.UseCookieAuthentication(new CookieAuthenticationOptions
-                {
-                    AuthenticationScheme = "cookies",
-                    AutomaticAuthenticate = true,
-                    LoginPath = new PathString("/signin"),
-                    LogoutPath = new PathString("/signout")
-                });
-
-                app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
-                {
-                    AuthenticationScheme = OpenIdConnectDefaults.AuthenticationScheme,
-                    SignInScheme = "cookies",
-                    ClientId = ClientId,
-                    ClientSecret = ClientSecret,
-                    Authority = Authority,
-                    ResponseType = "code id_token",
-                    GetClaimsFromUserInfoEndpoint = true,
-                    SaveTokens = true,
-                    UseTokenLifetime = true
-                });
             }
 
             app.UseStaticFiles();
