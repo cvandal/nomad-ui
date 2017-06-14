@@ -6,6 +6,13 @@
             <h4>Servers</h4>
 
             <input name="search" type="text" placeholder="&#8981;">
+            <script type="text/javascript">
+                var search = "@ViewData["Search"]";
+
+                if (search) {
+                    $('.search input').val(search)
+                }
+            </script>
         </form>
 
         <table class="table table-hover">

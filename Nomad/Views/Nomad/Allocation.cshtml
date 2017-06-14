@@ -113,7 +113,7 @@
                                             hoverBackgroundColor: ['#1fb58f', '#eab126'],
                                             borderColor: ['#1e1e1e', '#1e1e1e']
                                         }]
-}}
+                                    }}
                                     options={{
                                         cutoutPercentage: 75,
                                         legend: {
@@ -137,30 +137,44 @@
     <div class="col-md-6">
         <h4>Logs</h4>
 
-        <ul class="nav logs-nav">
-            @foreach (var log in Model.Logs.OrderBy(l => l.Name))
-            {
-                <li class="nav-item"><a class="nav-link log" href="#">@log.Name</a></li>
-            }
-        </ul>
+        <div class="row">
+            <div class="col-md-4" style="height: 800px;max-height: 800px !important; overflow: auto;">
+                <ul class="list-group">
+                    <li class="list-group-item">/alloc</li>
+                    <li class="list-group-item list-group-item-condensed">
+                        <ul class="list-group">
+                            <li class="list-group-item">/logs</li>
+                            <li class="list-group-item list-group-item-condensed">
+                                <ul class="list-group logs">
+                                    @foreach (var log in Model.Logs.OrderBy(l => l.Name))
+                                    {
+                                        <li class="list-group-item log-name"><a href="#">@log.Name</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
 
-        <div id="log">
-            <pre><code></code></pre>
+            <div class="col-md-8" style="max-height: 800px !important; overflow: auto;">
+                <pre style="white-space: pre-wrap;"><code class="log-content"></code></pre>
+            </div>
         </div>
 
         <script>
-            $('.log').on("click", function () {
-                $('.log').removeClass('active');
+            $('.log-name').on("click", function () {
+                $('.log-name').removeClass('active');
                 $(this).addClass('active');
 
-                $('#log pre code').html('<img src="images/loading.gif" alt="Loading..." />');
+                $('.log-content').html('<img src="images/loading.gif" alt="Loading..." />');
 
                 $.get("/allocation/log?client=@Model.Resources.Networks.FirstOrDefault().IP&id=@Model.ID&log=" + $(this).text(), function (content) {
                     if (content) {
-                        $('#log pre code').html(content);
+                        $('.log-content').html(content);
                     }
                     else {
-                        $('#log pre code').html("¯\\_(ツ)_/¯");
+                        $('.log-content').html("¯\\_(ツ)_/¯");
                     }
                 });
             });
@@ -213,26 +227,10 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
+        <h4>Raw JSON <a class="material-icons" href="#json" data-toggle="collapse">keyboard_arrow_down</a></h4>
 
         <div id="json" class="collapse">
             <pre><code>@ViewData["Json"]</code></pre>
         </div>
     </div>
 </div>
-
-<!-- React -->
-<script src="~/js/react-15.5.4.min.js"></script>
-<script src="~/js/react-dom-15.5.4.min.js"></script>
-<script src="~/js/axios-0.16.1.min.js"></script>
-<script src="~/js/babel.min.js"></script> <!-- 6.24.0 -->
-
-<!-- Chart.js -->
-<script src="~/js/chartjs-2.5.0.min.js"></script>
-<script src="~/js/react-chartjs-2.1.0.min.js"></script>
-
-<!-- Highlight.js -->
-<script src="~/js/highlightjs-9.11.0.min.js"></script>
-<script>
-    hljs.initHighlightingOnLoad();
-</script>

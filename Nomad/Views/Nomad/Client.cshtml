@@ -37,17 +37,15 @@
         </ul>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <h4>Attributes</h4>
 
         <ul class="list-group">
-            <ul class="list-group">
-                <li class="list-group-item"><strong>OS Version</strong>: @Model.Attributes.Where(a => a.Key == "os.name").Select(a => a.Value).FirstOrDefault() @Model.Attributes.Where(a => a.Key == "os.version").Select(a => a.Value).FirstOrDefault()</li>
-                <li class="list-group-item"><strong>Docker Version</strong>: @Model.Attributes.Where(a => a.Key == "driver.docker.version").Select(a => a.Value).FirstOrDefault()</li>
-                <li class="list-group-item"><strong>Nomad Version</strong>: @Model.Attributes.Where(a => a.Key == "nomad.version").Select(a => a.Value).FirstOrDefault()</li>
-                <li class="list-group-item"><strong>Consul Version</strong>: @Model.Attributes.Where(a => a.Key == "consul.version").Select(a => a.Value).FirstOrDefault()</li>
-                <li class="list-group-item"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#attributeModal">More...</button></li>
-            </ul>
+            <li class="list-group-item"><strong>OS Version</strong>: @Model.Attributes.Where(a => a.Key == "os.name").Select(a => a.Value).FirstOrDefault() @Model.Attributes.Where(a => a.Key == "os.version").Select(a => a.Value).FirstOrDefault()</li>
+            <li class="list-group-item"><strong>Docker Version</strong>: @Model.Attributes.Where(a => a.Key == "driver.docker.version").Select(a => a.Value).FirstOrDefault()</li>
+            <li class="list-group-item"><strong>Nomad Version</strong>: @Model.Attributes.Where(a => a.Key == "nomad.version").Select(a => a.Value).FirstOrDefault()</li>
+            <li class="list-group-item"><strong>Consul Version</strong>: @Model.Attributes.Where(a => a.Key == "consul.version").Select(a => a.Value).FirstOrDefault()</li>
+            <li class="list-group-item"><button type="button" class="btn btn-link" data-toggle="modal" data-target="#attributeModal">More...</button></li>
         </ul>
 
         <div id="attributeModal" class="modal fade" tabindex="-1" role="dialog">
@@ -57,7 +55,7 @@
                         <ul class="list-group">
                             @foreach (var attribute in Model.Attributes.OrderBy(a => a.Key))
                             {
-                                <li class="list-group-item"><strong>@attribute.Key</strong>: @attribute.Value</li>
+                                <li class="list-group-item"><strong>@attribute.Key:</strong>&nbsp;@attribute.Value</li>
                             }
                         </ul>
                     </div>
@@ -200,26 +198,10 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h4>Raw JSON <a href="#json" data-toggle="collapse">&darr;</a></h4>
+        <h4>Raw JSON <a class="material-icons" href="#json" data-toggle="collapse">keyboard_arrow_down</a></h4>
 
         <div id="json" class="collapse">
             <pre><code>@ViewData["Json"]</code></pre>
         </div>
     </div>
 </div>
-
-<!-- React -->
-<script src="~/js/react-15.5.4.min.js"></script>
-<script src="~/js/react-dom-15.5.4.min.js"></script>
-<script src="~/js/axios-0.16.1.min.js"></script>
-<script src="~/js/babel.min.js"></script> <!-- 6.24.0 -->
-
-<!-- Chart.js -->
-<script src="~/js/chartjs-2.5.0.min.js"></script>
-<script src="~/js/react-chartjs-2.1.0.min.js"></script>
-
-<!-- Highlight.js -->
-<script src="~/js/highlightjs-9.11.0.min.js"></script>
-<script>
-    hljs.initHighlightingOnLoad();
-</script>
