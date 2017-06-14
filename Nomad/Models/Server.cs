@@ -14,7 +14,7 @@ namespace Nomad.Models
     {
         public string Name { get; set; }
         public string Addr { get; set; }
-        public long Port { get; set; }
+        public string Port { get; set; }
         public Dictionary<string, dynamic> Tags { get; set; }
         public string Status { get; set; }
         public long ProtocolMin { get; set; }
@@ -46,8 +46,8 @@ namespace Nomad.Models
     {
         public string Address { get; set; }
         public string ID { get; set; }
-        public bool Leader { get; set; }
+        public string Leader { get; set; }
         public string Node { get; set; }
-        public bool Voter { get; set; }
+        public string Voter { get; set; }
     }
 }
