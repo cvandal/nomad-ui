@@ -1,9 +1,4 @@
-﻿@model Nomad.Extensions.PaginatedList<Nomad.Models.Allocation>
-
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
+﻿@model Nomad.Extensions.PaginatedListExtension<Nomad.Models.Allocation>
 
 <div class="row">
     <div class="col-md-12">
@@ -11,6 +6,13 @@
             <h4>Allocations</h4>
 
             <input name="search" type="text" placeholder="&#8981;">
+            <script type="text/javascript">
+                var search = "@ViewData["Search"]";
+
+                if (search) {
+                    $('.search input').val(search)
+                }
+            </script>
         </form>
         
         <table class="table table-hover">
@@ -41,8 +43,8 @@
 
         <nav>
             <ul class="pagination">
-                <li class="page-item @prevDisabled"><a class="page-link" href="/allocations?page=@(Model.PageIndex - 1)">Previous</a></li>
-                <li class="page-item @nextDisabled"><a class="page-link" href="/allocations?page=@(Model.PageIndex + 1)">Next</a></li>
+                @if (Model.HasPreviousPage) { <li class="page-item"><a class="page-link" href="/allocations?page=@(Model.PageIndex - 1)">Previous</a></li> }
+                @if (Model.HasNextPage) { <li class="page-item"><a class="page-link" href="/allocations?page=@(Model.PageIndex + 1)">Next</a></li> }
             </ul>
         </nav>
     </div>

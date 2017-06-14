@@ -1,9 +1,4 @@
-﻿@model Nomad.Extensions.PaginatedList<Nomad.Models.Member>
-
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
+﻿@model Nomad.Extensions.PaginatedListExtension<Nomad.Models.Member>
 
 <div class="row">
     <div class="col-md-12">
@@ -28,16 +23,25 @@
                 @foreach (var member in Model)
                 {
                     <tr class="row">
-                        <td class="col"><a href="/server?ip=@member.Addr">@member.Name</a></td>
+                        <td class="col">
+                            @if (member.Status != "down")
+                            {
+                                <a href="/server?ip=@member.Addr">@member.Name</a>
+                            }
+                            else
+                            {
+                                @member.Name
+                            }
+                        </td>
                         <td class="col">@member.Addr</td>
-                        <td class="col">@member.Port</td>
+                        <td class="col">@(!String.IsNullOrEmpty(member.Port) ? member.Port : " ")</td>
                         <td class="col">@member.Status</td>
                         @foreach (var server in member.Operator.Servers)
                         {
                             @if (server.Node == member.Name)
                             {
-                                <td class="col">@server.Voter</td>
-                                <td class="col">@server.Leader</td>
+                                <td class="col">@(!String.IsNullOrEmpty(server.Voter) ? server.Voter : " ")</td>
+                                <td class="col">@(!String.IsNullOrEmpty(server.Leader) ? server.Leader : " ")</td>
                             }
                         }
                     </tr>
@@ -47,8 +51,8 @@
 
         <nav>
             <ul class="pagination">
-                <li class="page-item @prevDisabled"><a class="page-link" href="/servers?page=@(Model.PageIndex - 1)">Previous</a></li>
-                <li class="page-item @nextDisabled"><a class="page-link" href="/servers?page=@(Model.PageIndex + 1)">Next</a></li>
+                @if (Model.HasPreviousPage) { <li class="page-item"><a class="page-link" href="/servers?page=@(Model.PageIndex - 1)">Previous</a></li> }
+                @if (Model.HasNextPage) { <li class="page-item"><a class="page-link" href="/servers?page=@(Model.PageIndex + 1)">Next</a></li> }
             </ul>
         </nav>
     </div>
