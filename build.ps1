@@ -8,12 +8,13 @@ function Start-Build ()
     )
 
     $workingDir = Get-Location
+    $app = "Nomad"
 
     # Cleanup
-    Get-ChildItem -Path ".\Nomad\bin" -Recurse | Remove-Item -Recurse -Force
-    Get-ChildItem -Path ".\Nomad\obj" -Recurse | Remove-Item -Recurse -Force
-    Remove-Item -Path ".\Nomad\bin" -Force
-    Remove-Item -Path ".\Nomad\obj" -Force
+    Get-ChildItem -Path ".\$app\bin" -Recurse | Remove-Item -Recurse -Force
+    Get-ChildItem -Path ".\$app\obj" -Recurse | Remove-Item -Recurse -Force
+    Remove-Item -Path ".\$app\bin" -Force
+    Remove-Item -Path ".\$app\obj" -Force
 
     # Restore packages, build the application, and publish the application
     Start-Process -FilePath "dotnet" -ArgumentList "restore" -NoNewWindow -PassThru -Wait
