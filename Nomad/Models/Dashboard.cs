@@ -12,7 +12,7 @@ namespace Nomad.Models
         public List<Member> Servers { get; set; }
 
         // Jobs
-        public long PendingJobs =>Jobs.Sum(j => j.Pending);
+        public long PendingJobs => Jobs.Sum(j => j.Pending);
         public long RunningJobs => Jobs.Sum(j => j.Running);
         public long DeadJobs => Jobs.Sum(j => j.Dead);
 
