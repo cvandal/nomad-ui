@@ -30,7 +30,7 @@ ENTRYPOINT ["dotnet", "Nomad.dll"]
 1. Run `docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 <image_name>:<image_tag>`
 
 ### Screenshots
-![alt text](https://github.com/cvandal/nomad-ui/raw/master/Nomad/wwwroot/images/collage.png "Nomad UI")
+![alt text](https://github.com/cvandal/nomad-ui/raw/master/wwwroot/images/collage.png "Nomad UI")
 
 ### Known Issues
 `¯\_(ツ)_/¯`
