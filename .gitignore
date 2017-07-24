@@ -1,0 +1,6 @@
+.vs
+.vscode
+bin
+node_modules
+obj
+yarn.lock

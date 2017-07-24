@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Nomad - Error</title>
+
+        <link rel="stylesheet" href="~/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </head>
+
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <a class="navbar-brand" href="/"><img src="~/images/nomad.png" alt="Nomad" height="20"></a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/">Dashboard</a></li>
+                        <li><a href="/jobs">Jobs</a></li>
+                        <li><a href="/evaluations">Evaluations</a></li>
+                        <li><a href="/allocations">Allocations</a></li>
+                        <li><a href="/clients">Clients</a></li>
+                        <li><a href="/servers">Servers</a></li>
+                        <!--<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tools <span class="caret"></span></a>
+                            
+                            <ul class="dropdown-menu">
+                                <li><a id="runGarbageCollection" href="#">Run Garbage Collection</a></li>
+                            </ul>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="text-center">
+                <h1>¯\_(ツ)_/¯</h1>
+
+                <h1>@ViewData["StatusCode"]</h1>
+                
+                <p>@ViewData["Message"]</p>
+
+                <pre class="stacktrace">@ViewData["StackTrace"]</pre>
+            </div>
+        </div>
+    </body>
+</html>
