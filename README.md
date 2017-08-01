@@ -29,6 +29,9 @@ ENTRYPOINT ["dotnet", "Nomad.dll"]
 ### Run
 1. Run `docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 <image_name>:<image_tag>`
 
+## Discuss
+Join the HashiCorp Community Slack team! https://join.slack.com/t/hashicorpcommunity/shared_invite/MjE5NzE3ODI3NzE2LTE1MDE0NDM4OTYtZDI1MTNlMTJmNw 
+
 ## Screenshots
 ![alt text](https://github.com/cvandal/nomad-ui/raw/master/wwwroot/images/collage.png "Nomad UI")
 
