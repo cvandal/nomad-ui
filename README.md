@@ -1,6 +1,6 @@
 # Nomad UI
 
-A UI for Nomad by HashiCorp.
+A cross platform UI for Nomad by HashiCorp written in .NET Core and React.
 
 ## Usage
 1. Run `docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 cvandal/nomad-ui:1.0.0`
@@ -23,11 +23,13 @@ COPY . /app
 
 WORKDIR /app
 
+ENV ASPNETCORE_URLS=http://*:5000
+
 ENTRYPOINT ["dotnet", "Nomad.dll"]
 ```
 4. Run `docker build -t <image_name>:<image_tag> .`
 ### Run
-1. Run `docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -e "ASPNETCORE_URLS=http://*:5000" -p 5000:5000 <image_name>:<image_tag>`
+1. Run `docker run -itd -e "NOMAD_URL=http://<base_url>:<port>" -p 5000:5000 <image_name>:<image_tag>`
 
 ## Discuss
 Join the HashiCorp Community Slack team! https://join.slack.com/t/hashicorpcommunity/shared_invite/MjE5NzE3ODI3NzE2LTE1MDE0NDM4OTYtZDI1MTNlMTJmNw 
