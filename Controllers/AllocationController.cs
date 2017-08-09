@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Nomad.Extensions;
 using Nomad.Models;
 
 namespace Nomad.Controllers
@@ -123,10 +124,12 @@ namespace Nomad.Controllers
             return events.OrderByDescending(e => e.DateTime).ToList();
         }
 
-        public async Task<Stats> GetAllocationStatsAsync(string client, string id)
+        public async Task<Stats> GetAllocationStatsAsync(string ip, string id)
         {
+            var address = ip.ConvertToFriendlyAddress();
+
             using (HttpClient httpClient = new HttpClient())
-            using (HttpResponseMessage response = await httpClient.GetAsync("http://" + client + ":4646/v1/client/allocation/" + id + "/stats"))
+            using (HttpResponseMessage response = await httpClient.GetAsync(address + "/v1/client/allocation/" + id + "/stats"))
             using (HttpContent content = response.Content)
             {
                 var result = await content.ReadAsStringAsync();
@@ -135,10 +138,12 @@ namespace Nomad.Controllers
             }
         }
 
-        public async Task<List<Log>> GetAllocationLogsAsync(string client, string id)
+        public async Task<List<Log>> GetAllocationLogsAsync(string ip, string id)
         {
+            var address = ip.ConvertToFriendlyAddress();
+
             using (HttpClient httpClient = new HttpClient())
-            using (HttpResponseMessage response = await httpClient.GetAsync("http://" + client + ":4646/v1/client/fs/ls/" + id + "?path=/alloc/logs"))
+            using (HttpResponseMessage response = await httpClient.GetAsync(address + "/v1/client/fs/ls/" + id + "?path=/alloc/logs"))
             using (HttpContent content = response.Content)
             {
                 var result = await content.ReadAsStringAsync();
@@ -147,10 +152,12 @@ namespace Nomad.Controllers
             }
         }
 
-        public async Task<String> GetAllocationLogAsync(string client, string id, string log)
+        public async Task<String> GetAllocationLogAsync(string ip, string id, string log)
         {
+            var address = ip.ConvertToFriendlyAddress();
+
             using (HttpClient httpClient = new HttpClient())
-            using (HttpResponseMessage response = await httpClient.GetAsync("http://" + client + ":4646/v1/client/fs/cat/" + id + "?path=/alloc/logs/" + log))
+            using (HttpResponseMessage response = await httpClient.GetAsync(address + "/v1/client/fs/cat/" + id + "?path=/alloc/logs/" + log))
             using (HttpContent content = response.Content)
             {
                 return await content.ReadAsStringAsync();

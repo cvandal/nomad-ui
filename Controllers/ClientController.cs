@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Nomad.Extensions;
 using Nomad.Models;
 
 namespace Nomad.Controllers
@@ -83,10 +84,12 @@ namespace Nomad.Controllers
             }
         }
 
-        public async Task<Stats> GetClientStatsAsync(string client)
+        public async Task<Stats> GetClientStatsAsync(string ip)
         {
+            var address = ip.ConvertToFriendlyAddress();
+
             using (HttpClient httpClient = new HttpClient())
-            using (HttpResponseMessage response = await httpClient.GetAsync("http://" + client + ":4646/v1/client/stats"))
+            using (HttpResponseMessage response = await httpClient.GetAsync(address + "/v1/client/stats"))
             using (HttpContent content = response.Content)
             {
                 var result = await content.ReadAsStringAsync();
