@@ -13,7 +13,7 @@ namespace Nomad.Controllers
     public class AllocationController : Controller
     {
         private readonly IAllocationLogProviderFactory _allocationLogProviderFactory;
-        private static readonly string NomadUrl = "http://10.123.26.44:4646";//Environment.GetEnvironmentVariable("NOMAD_URL");
+        private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
 
         public AllocationController(IAllocationLogProviderFactory allocationLogProviderFactory)
         {
@@ -148,7 +148,7 @@ namespace Nomad.Controllers
             return await allocationLogProvider.GetAllocationLogsAsync(client, id).ConfigureAwait(false);
         }
 
-        public async Task<String> GetAllocationLogAsync(string client, string id, string log)
+        public async Task<string> GetAllocationLogAsync(string client, string id, string log)
         {
             var allocationLogProvider = await _allocationLogProviderFactory.GetAllocationLogProviderAsync(client).ConfigureAwait(false);
             return await allocationLogProvider.GetAllocationLogAsync(client, id, log).ConfigureAwait(false);

@@ -20,8 +20,6 @@ namespace Nomad.Services.AllocationLogProviders
             _port = port;
         }
 
-
-
         public async Task<bool> CanProvideAsync(string client)
         {
             return await System.Threading.Tasks.Task.FromResult(true);
@@ -39,9 +37,9 @@ namespace Nomad.Services.AllocationLogProviders
             }
         }
 
-        public void AssignClientsAsync(IList<string> clients)
+        public async System.Threading.Tasks.Task AssignClientsAsync(IList<string> clients)
         {
-            // do nothing
+            await System.Threading.Tasks.Task.FromResult<object>(null);
         }
 
         public async Task<List<Log>> GetAllocationLogsAsync(string client, string id)

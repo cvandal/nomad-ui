@@ -16,9 +16,10 @@ namespace Nomad.Services.AllocationLogProviders
             _clients = new List<string>();
         }
 
-        public void AssignClientsAsync(IList<string> clients)
+        public async Task AssignClientsAsync(IList<string> clients)
         {
             _clients = clients ?? new List<string>();
+            await Task.FromResult<object>(null);
         }
 
         public Task<bool> CanProvideAsync(string client)

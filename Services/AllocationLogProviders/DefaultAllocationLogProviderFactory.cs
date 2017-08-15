@@ -15,7 +15,7 @@ namespace Nomad.Services.AllocationLogProviders
         {
             foreach (var allocationLogProvider in _allocationLogProviders)
             {
-                if (await allocationLogProvider.CanProvideAsync(client))
+                if (await allocationLogProvider.CanProvideAsync(client).ConfigureAwait(false))
                     return allocationLogProvider;
             }
 

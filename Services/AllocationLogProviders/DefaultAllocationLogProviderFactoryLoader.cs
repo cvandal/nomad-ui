@@ -4,15 +4,20 @@ using System.Threading.Tasks;
 
 namespace Nomad.Services.AllocationLogProviders
 {
-    public class AllocationLogProviderFactoryLoader : IAllocationLogProviderFactoryLoader
+    public class DefaultAllocationLogProviderFactoryLoader : IAllocationLogProviderFactoryLoader
     {
-        public IList<AllocaltionLogsProviderClientBinding> AllocaltionLogsProviderClientBindings { get; set; } = 
-            new List<AllocaltionLogsProviderClientBinding>();
-
+        private readonly IList<AllocaltionLogsProviderClientBinding> _allocaltionLogsProviderClientBindings;
+        
+        public DefaultAllocationLogProviderFactoryLoader(
+            IList<AllocaltionLogsProviderClientBinding> allocaltionLogsProviderClientBindings)
+        {
+            _allocaltionLogsProviderClientBindings = allocaltionLogsProviderClientBindings ?? 
+                new List<AllocaltionLogsProviderClientBinding>();
+        }
         public async Task<IAllocationLogProviderFactory> GetAllocationLogProviderFactoryAsync()
         {
             IList<IAllocationLogProvider> providers = new List<IAllocationLogProvider>();
-            foreach (var allocaltionLogsProviderClientBinding in AllocaltionLogsProviderClientBindings)
+            foreach (var allocaltionLogsProviderClientBinding in _allocaltionLogsProviderClientBindings)
             {
                 var providerAssembly = 
                     Assembly.Load(new AssemblyName(allocaltionLogsProviderClientBinding.AllocaltionLogsProviderAssemblyInfo.AssemblyName));
@@ -20,7 +25,8 @@ namespace Nomad.Services.AllocationLogProviders
                     .FullyQualifiedClassName) as IAllocationLogProvider;
 
                 // ReSharper disable once PossibleNullReferenceException
-                providerInstance.AssignClientsAsync(allocaltionLogsProviderClientBinding.Clients);
+                await providerInstance.AssignClientsAsync(allocaltionLogsProviderClientBinding.Clients).
+                    ConfigureAwait(false);
                 
                 providers.Add(providerInstance);
 

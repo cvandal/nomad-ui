@@ -1,4 +1,5 @@
-﻿using Nomad.Interfaces;
+﻿using System.Collections.Generic;
+using Nomad.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,12 +28,13 @@ namespace Nomad
         
         public void ConfigureServices(IServiceCollection services)
         {
-            var allocationLogProviderFactoryLoader = new AllocationLogProviderFactoryLoader();
-            Configuration.GetSection(nameof(AllocationLogProviderFactoryLoader)).Bind(allocationLogProviderFactoryLoader);
+            var allocaltionLogsProviderClientBindings = new List<AllocaltionLogsProviderClientBinding>();
+            Configuration.GetSection(nameof(AllocaltionLogsProviderClientBinding)).Bind(allocaltionLogsProviderClientBindings);
 
-            var allocationProviderFactory = allocationLogProviderFactoryLoader.GetAllocationLogProviderFactoryAsync().Result;
+            var allocationProviderFactory = new DefaultAllocationLogProviderFactoryLoader(allocaltionLogsProviderClientBindings).
+                GetAllocationLogProviderFactoryAsync().Result;
 
-            services.AddSingleton<IAllocationLogProviderFactory>(allocationProviderFactory);
+            services.AddSingleton(allocationProviderFactory);
             services.AddMvc();
         }
 
