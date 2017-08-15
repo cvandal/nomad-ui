@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nomad.Services.AllocationLogProviders;
 
 namespace Nomad
 {
@@ -19,12 +20,19 @@ namespace Nomad
             Configuration = builder.Build();
 
             var plugins = PluginLoader<IPlugin>.LoadPlugins("Plugins");
+            
         }
 
         public IConfigurationRoot Configuration { get; }
         
         public void ConfigureServices(IServiceCollection services)
         {
+            var allocationLogProviderFactoryLoader = new AllocationLogProviderFactoryLoader();
+            Configuration.GetSection(nameof(AllocationLogProviderFactoryLoader)).Bind(allocationLogProviderFactoryLoader);
+
+            var allocationProviderFactory = allocationLogProviderFactoryLoader.GetAllocationLogProviderFactoryAsync().Result;
+
+            services.AddSingleton<IAllocationLogProviderFactory>(allocationProviderFactory);
             services.AddMvc();
         }
 

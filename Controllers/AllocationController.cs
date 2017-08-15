@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Nomad.Models;
+using Nomad.Services.AllocationLogProviders;
 
 namespace Nomad.Controllers
 {
     public class AllocationController : Controller
     {
-        private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
+        private readonly IAllocationLogProviderFactory _allocationLogProviderFactory;
+        private static readonly string NomadUrl = "http://10.123.26.44:4646";//Environment.GetEnvironmentVariable("NOMAD_URL");
+
+        public AllocationController(IAllocationLogProviderFactory allocationLogProviderFactory)
+        {
+            _allocationLogProviderFactory = allocationLogProviderFactory;
+        }
 
         [HttpGet("/allocations")]
         public IActionResult Index()
@@ -137,24 +144,14 @@ namespace Nomad.Controllers
 
         public async Task<List<Log>> GetAllocationLogsAsync(string client, string id)
         {
-            using (HttpClient httpClient = new HttpClient())
-            using (HttpResponseMessage response = await httpClient.GetAsync("http://" + client + ":4646/v1/client/fs/ls/" + id + "?path=/alloc/logs"))
-            using (HttpContent content = response.Content)
-            {
-                var result = await content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<List<Log>>(result);
-            }
+            var allocationLogProvider = await _allocationLogProviderFactory.GetAllocationLogProviderAsync(client).ConfigureAwait(false);
+            return await allocationLogProvider.GetAllocationLogsAsync(client, id).ConfigureAwait(false);
         }
 
         public async Task<String> GetAllocationLogAsync(string client, string id, string log)
         {
-            using (HttpClient httpClient = new HttpClient())
-            using (HttpResponseMessage response = await httpClient.GetAsync("http://" + client + ":4646/v1/client/fs/cat/" + id + "?path=/alloc/logs/" + log))
-            using (HttpContent content = response.Content)
-            {
-                return await content.ReadAsStringAsync();
-            }
+            var allocationLogProvider = await _allocationLogProviderFactory.GetAllocationLogProviderAsync(client).ConfigureAwait(false);
+            return await allocationLogProvider.GetAllocationLogAsync(client, id, log).ConfigureAwait(false);
         }
     }
 }
