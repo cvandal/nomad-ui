@@ -2,12 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Nomad.Controllers
 {
-    public class DashboardController : Controller
+    public class PingController : Controller
     {
-        // GET /
         public IActionResult Index()
         {
-            return View("~/Views/Nomad/Index.cshtml");
+            return Content("pong");
         }
     }
 }

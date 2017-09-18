@@ -1,6 +1,5 @@
-.vs
-.vscode
-bin
-node_modules
-obj
-yarn.lock
+.vscode/
+bin/
+node_modules/
+obj/
+npm-shrinkwrap.json

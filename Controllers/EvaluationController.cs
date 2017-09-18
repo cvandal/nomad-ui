@@ -1,89 +1,84 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Nomad.Models;
+using Newtonsoft.Json.Linq;
+using Nomad.Extensions;
 
 namespace Nomad.Controllers
 {
     public class EvaluationController : Controller
     {
         private static readonly string NomadUrl = Environment.GetEnvironmentVariable("NOMAD_URL");
-
-        [HttpGet("/evaluations")]
-        public IActionResult Index()
+        
+        // GET /evaluation
+        [HttpGet("[action]")]
+        public IActionResult Evaluation()
         {
-            return View("~/Views/Index.cshtml");
+            return View("~/Views/Nomad/Index.cshtml");
         }
 
-        [HttpGet("/api/evaluations")]
-        public async Task<JsonResult> GetEvaluationsAsJsonResult(string search)
+        // GET /api/evaluation?id={id}
+        [HttpGet("api/evaluation")]
+        public async Task<JObject> GetEvaluationAsync(string id)
         {
-            var evaluations = await GetEvaluationsAsync();
-
-            if (!String.IsNullOrEmpty(search))
+            using (var client = new HttpClient())
+            using (var response = await client.GetAsync(NomadUrl + "/v1/evaluation/" + id))
+            using (var content = response.Content.ReadAsStringAsync())
             {
-                evaluations = evaluations.Where(e => e.JobID.ToLower().Contains(search.ToLower())).ToList();
-            }
-
-            return Json(evaluations);
-        }
-
-        [HttpGet("/evaluation")]
-        public IActionResult Evaluation(string id)
-        {
-            return View("~/Views/Index.cshtml");
-        }
-
-        [HttpGet("/api/evaluation")]
-        public async Task<IActionResult> GetEvaluationAsJsonResult(string id)
-        {
-            var evaluation = await GetEvaluationAsync(id);
-            evaluation.Allocations = await GetEvaluationAllocationsAsync(id);
-
-            return Json(evaluation);
-        }
-
-        public async Task<List<Evaluation>> GetEvaluationsAsync()
-        {
-            List<Evaluation> evaluations;
-
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/evaluations"))
-            using (HttpContent content = response.Content)
-            {
-                var result = await content.ReadAsStringAsync();
-
-                evaluations = JsonConvert.DeserializeObject<List<Evaluation>>(result);
-            }
-
-            return evaluations.OrderBy(e => e.JobID).ToList();
-        }
-
-        public async Task<Evaluation> GetEvaluationAsync(string id)
-        {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/evaluation/" + id))
-            using (HttpContent content = response.Content)
-            {
-                var result = await content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<Evaluation>(result);
+                return JsonConvert.DeserializeObject<JObject>(await content);
             }
         }
 
-        public async Task<List<Allocation>> GetEvaluationAllocationsAsync(string id)
+        // GET /api/evaluation/allocations?id={id}
+        [HttpGet("api/evaluation/allocations")]
+        public async Task<List<JObject>> GetEvaluationAllocationsAsync(string id)
         {
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(NomadUrl + "/v1/evaluation/" + id + "/allocations"))
-            using (HttpContent content = response.Content)
+            using (var client = new HttpClient())
+            using (var response = await client.GetAsync(NomadUrl + "/v1/evaluation/" + id + "/allocations"))
+            using (var content = response.Content.ReadAsStringAsync())
             {
-                var result = await content.ReadAsStringAsync();
+                dynamic json = JsonConvert.DeserializeObject<List<JObject>>(await content);
+                var allocations = new List<JObject>();
 
-                return JsonConvert.DeserializeObject<List<Allocation>>(result);
+                foreach (var allocation in json)
+                {
+                    allocation.CreateTime = DateTimeExtension.FromUnixTime(Convert.ToInt64(allocation.CreateTime.Value)); // Convert the evaluation allocation create time from UnixTime (milliseconds) to DateTime
+                    allocations.Add(allocation);
+                }
+
+                return allocations;
+            }
+        }
+
+        // GET /evaluations
+        [HttpGet("[action]")]
+        public IActionResult Evaluations()
+        {
+            return View("~/Views/Nomad/Index.cshtml");
+        }
+
+        // GET /api/evaluations
+        [HttpGet("api/evaluations")]
+        public async Task<List<JObject>> GetEvaluationsAsync(string search = null)
+        {
+            using (var client = new HttpClient())
+            using (var response = await client.GetAsync(NomadUrl + "/v1/evaluations"))
+            using (var content = response.Content.ReadAsStringAsync())
+            {
+                dynamic json = JsonConvert.DeserializeObject<List<JObject>>(await content);
+                var evaluations = new List<JObject>();
+
+                foreach (var evaluation in json)
+                    evaluations.Add(evaluation);
+
+                if (!String.IsNullOrEmpty(search))
+                    evaluations = evaluations.Where(e => e["JobID"].ToString().ToLower().Contains(search.ToLower())).ToList();
+
+                return evaluations.OrderBy(e => e["JobID"]).ToList();
             }
         }
     }

@@ -1,37 +1,52 @@
-﻿using Microsoft.AspNetCore.Builder;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Nomad.Services.AllocationLogProviders;
 
 namespace Nomad
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
-        
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            var allocationLogsProviderClientBindings = new List<AllocationLogsProviderClientBinding>();
+            Configuration.GetSection(nameof(AllocationLogsProviderClientBinding)).Bind(allocationLogsProviderClientBindings);
+
+            var allocationProviderFactory = new DefaultAllocationLogProviderFactoryLoader(allocationLogsProviderClientBindings)
+                .GetAllocationLogProviderFactoryAsync().Result;
+
+            services.AddSingleton(allocationProviderFactory);
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
-            app.UseExceptionHandler("/error");
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true,
+                    ReactHotModuleReplacement = true
+                });
+            }
+            else
+            {
+                app.UseExceptionHandler("/Shared/Error");
+            }
 
             app.UseStaticFiles();
 
@@ -40,6 +55,10 @@ namespace Nomad
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Dashboard}/{action=Index}/{id?}");
+
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Dashboard", action = "Index" });
             });
         }
     }
