@@ -25,8 +25,7 @@ namespace Nomad
             var allocationLogsProviderClientBindings = new List<AllocationLogsProviderClientBinding>();
             Configuration.GetSection(nameof(AllocationLogsProviderClientBinding)).Bind(allocationLogsProviderClientBindings);
 
-            var allocationProviderFactory = new DefaultAllocationLogProviderFactoryLoader(allocationLogsProviderClientBindings)
-                .GetAllocationLogProviderFactoryAsync().Result;
+            var allocationProviderFactory = new DefaultAllocationLogProviderFactoryLoader(allocationLogsProviderClientBindings).GetAllocationLogProviderFactoryAsync().Result;
 
             services.AddSingleton(allocationProviderFactory);
             services.AddMvc();
