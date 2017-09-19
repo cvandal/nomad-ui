@@ -1,7 +1,3 @@
-.border {
-    border: solid 1px red;
-}
-
 * {
     border-radius: 0 !important;
 }
@@ -200,4 +196,31 @@ button:focus {
 
 .list-group-item-child {
     padding: 15px 0 0 15px !important;
+}
+
+.btn-link {
+    margin: 0;
+    padding: 0;
+}
+
+.btn-link,
+.btn-link:hover,
+.btn-link:focus {
+    color: #1fb58f;
+    text-decoration: none;
+    outline: none;
+}
+
+.log {
+    margin: 0;
+    padding: 0;
+    white-space: pre-wrap;
+    color: #fff;
+    background-color: #1e1e1e;
+    border: none;
+    overflow: auto;
+}
+
+.border {
+    border: solid 1px red;
 }
