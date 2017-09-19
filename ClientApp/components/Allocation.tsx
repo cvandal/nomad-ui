@@ -3,9 +3,11 @@ import { RouteComponentProps } from 'react-router';
 import 'isomorphic-fetch';
 import { Doughnut } from 'react-chartjs-2';
 import moment from 'moment';
+import $ from 'jquery';
 
 interface FetchData {
     allocation: any;
+    log: any;
     loading: boolean;
 }
 
@@ -15,7 +17,7 @@ export class Allocation extends React.Component<RouteComponentProps<{}>, FetchDa
     constructor() {
         super();
 
-        this.state = { allocation: null, loading: true};
+        this.state = { allocation: null, log: null, loading: true};
     }
 
     fetchData = (search) => {
@@ -23,6 +25,14 @@ export class Allocation extends React.Component<RouteComponentProps<{}>, FetchDa
             .then(response => response.json() as Promise<any[]>)
             .then(data => {
                 this.setState({ allocation: data, loading: false });
+            });
+    }
+
+    fetchLog = (client, id, log) => {
+        fetch('api/allocation/log?client=' + client + '&id=' + id + '&log=' + log)
+            .then(response => response.text())
+            .then(data => {
+                this.setState({ log: data, loading: false });
             });
     }
 
@@ -40,22 +50,31 @@ export class Allocation extends React.Component<RouteComponentProps<{}>, FetchDa
     public render() {
         let allocation = this.state.loading
             ? <p className="text-center"><em>Loading...</em></p>
-            : Allocation.renderAllocation(this.state.allocation);
-
-            return <div className="container-fluid">
+            : this.renderAllocation(this.state.allocation);
+        
+        return <div className="container-fluid">
             { allocation }
         </div>;
     }
 
-    private static renderAllocation(allocation) {
+    public renderAllocation(allocation) {
         let activeCpu = allocation.Stats.ResourceUsage.CpuStats.Percent;
         let idleCpu = (100 - activeCpu);
         let consumedMem = ((allocation.Stats.ResourceUsage.MemoryStats.MaxUsage / 1024) / 1024);
         let availableMem = (allocation.Resources.MemoryMB - (allocation.Stats.ResourceUsage.MemoryStats.MaxUsage / 1024) / 1024);
+        let ipAddress = allocation.Resources.Networks[0].IP;
+        let dynamicPort = allocation.Resources.Networks[0].DynamicPorts ? ':' + allocation.Resources.Networks[0].DynamicPorts[0].Value : "";
+        
+        $(document).ready(function() {
+            var divHeight = $('.test1').height();
+            console.log(divHeight);
+            divHeight = divHeight-96;
+            $('.test2').css('max-height', divHeight+'px');
+        });
 
         return <div>
             <div className="row">
-                <div className="col-sm-6 col-parent">
+                <div className="col-sm-6 col-parent test1">
                     <div className="row">
                         <div className="col-sm-12 col-parent">
                             <div className="row">
@@ -92,7 +111,7 @@ export class Allocation extends React.Component<RouteComponentProps<{}>, FetchDa
                                                 <li className="list-group-item"><strong>Memory (MB):</strong> { allocation.Resources.MemoryMB }</li>
                                                 <li className="list-group-item"><strong>Disk (MB):</strong> { allocation.Resources.DiskMB }</li>
                                                 <li className="list-group-item"><strong>Network (Mbps):</strong> { allocation.Resources.Networks[0].MBits }</li>
-                                                <li className="list-group-item"><strong>Address:</strong> <a href={"http://" + allocation.Resources.Networks[0].IP + ":" + allocation.Resources.Networks[0].DynamicPorts[0].Value} target="_blank">http://{allocation.Resources.Networks[0].IP}:{allocation.Resources.Networks[0].DynamicPorts[0].Value}</a></li>
+                                                <li className="list-group-item"><strong>Address:</strong> <a href={"http://" + ipAddress + dynamicPort} target="_blank">http://{ipAddress}{dynamicPort}</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -180,6 +199,20 @@ export class Allocation extends React.Component<RouteComponentProps<{}>, FetchDa
                             <h3 className="panel-title text-center">Logs</h3>
                         </div>
                         <div className="panel-body">
+                            <div className="row">
+                                <div className="col-sm-3 col-parent">
+                                    <ul className="list-group">
+                                        {allocation.Logs.sort().map(log =>
+                                            <li className="list-group-item"><button className="btn btn-link" onClick={e => this.fetchLog(allocation.Resources.Networks[0].IP, allocation.ID, log.Name)}>{ log.Name }, { log.Size } (Bytes)</button></li>
+                                        )}
+                                    </ul>
+                                </div>
+                                <div className="col-sm-9 col-parent">
+                                    <pre className="log test2">
+                                        { this.state.log }
+                                    </pre>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

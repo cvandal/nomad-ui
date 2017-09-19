@@ -57,8 +57,6 @@ namespace Nomad.Controllers
             }
         }
 
-        // GET /api/allocation/stats?client={client}&id={id}
-        [HttpGet("api/allocation/stats")]
         public async Task<JObject> GetAllocationStatsAsync(string client, string id)
         {
             using (var httpClient = new HttpClient())
@@ -69,15 +67,13 @@ namespace Nomad.Controllers
             }
         }
 
-        // GET /api/allocation/logs?client={client}&id={id}
-        [HttpGet("api/allocation/logs")]
-        public async Task<List<JObject>> GetAllocationLogsAsync(string client, string id)
+        public async Task<JArray> GetAllocationLogsAsync(string client, string id)
         {
             var allocationLogProvider = await _allocationLogProviderFactory.GetAllocationLogProviderAsync(client).ConfigureAwait(false);
             return await allocationLogProvider.GetAllocationLogsAsync(client, id).ConfigureAwait(false);
         }
 
-        // GET /api/allocation/log?client={client}&id={id}
+        // GET /api/allocation/log?client={client}&id={id}&log={log}
         [HttpGet("api/allocation/log")]
         public async Task<string> GetAllocationLogAsync(string client, string id, string log)
         {
