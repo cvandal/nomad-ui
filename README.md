@@ -1,3 +1,5 @@
+# With the upcoming release of Nomad 0.7 and its awesome built in UI, this project is no longer under development.
+
 # Nomad UI
 
 A cross platform UI for Nomad by HashiCorp written in .NET Core and React.
